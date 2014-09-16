@@ -1,0 +1,279 @@
+body {
+	font-size: 12px;
+	line-height: 1.5;
+	font-family: Arial, Helvetica, sans-serif;
+	background-repeat: repeat-x;
+	background-image: url('../img/header_bg.png');
+	margin: 0 20px 0 20px;
+	padding: 0;
+	vertical-align: baseline;
+}
+
+.odd {
+	background-color: #e5e5e5;	
+	border-bottom: 1px solid #ffffff;
+}
+
+.even {
+	background: transparent;	
+	border-bottom: 1px solid #e5e5e5;
+}
+
+.noborder {
+	border: none;
+}
+
+a, a:visited a:active, a:hover {
+	color: #468499;
+}
+
+h1 {
+	font-family: Georgia, Arial, Helvetica, sans-serif;
+	font-style: italic;
+	font-weight: bold;
+	font-size: 16px;
+	line-height: 16px;
+	color: #468499;
+	background: transparent;
+	margin-top: 7px;
+	margin-left: 25px;
+}
+
+h2 {
+	font-family: Arial;
+	font-size: 24px;
+	color: #303030;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+}
+
+h3 {
+	font-size: 13px;
+	font-weight: bold;
+}
+
+/* mapmodule product header */
+h2.products-header { 
+	font-size: 1.2em;
+	margin-bottom: 3px;
+	font-weight: bold;
+	color: #000;
+	background: transparent;
+}
+
+#header {
+	margin: 0;
+	top: 20px;
+	left: 0;
+	width: 100%;
+	background: #333030 url(../img/headerToolsActionABg.png) repeat-x top left;
+	color: #fff;	
+	position: relative;
+	height: 42px;
+}
+
+#headerbar {
+	margin-top: 18px;
+	/*border: 1px solid #000;*/
+}
+
+#content {
+	position: relative;
+	/*margin-left: 21px;
+	margin-right: 21px;*/
+	/*max-width: 1002px;*/
+	max-width: 800px;
+	margin: auto;
+	margin-top: 0;
+	margin-bottom: 21px;
+	
+}
+
+#content-narrow {
+	position: relative;
+	/*margin-left: 21px;
+	margin-right: 21px;*/
+	max-width: 700px;
+	margin: auto;
+	martin-top: 0;
+}
+
+.container {
+	margin-bottom: 21px;
+	max-width: 700px;
+	min-width: 650px;
+	float: right;
+}
+
+table.listing {
+	width: 100%;
+	border-collapse: collapse;
+	min-width: 650px;
+}
+
+table.listing td {
+	vertical-align: middle;
+	height: 30px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+table.listing th {
+	text-align: left;
+	font-family: arial;
+	font-size: 13px;
+	padding-left: 10px;
+	height: 30px;
+}
+
+ul.breadcrumb {
+	line-height: 25px;
+	background-color: #f1f1f1;
+	border: 1px solid #d5d5d5;
+	padding-left: 10px;
+	list-style-type: none;
+	margin-bottom: 25px;
+}
+
+ul.breadcrumb li {
+	margin-left: 0;
+	display: inline;
+}
+
+/*#login-info {
+	position: absolute;
+	right: 21px;
+	top: 5px;
+	line-height: 1.0;
+}
+
+#login-info a:visited, #login-info a {
+	color: #eee;
+}*/
+
+#language-choices {
+	position: absolute;
+	/*right: 21px;*/
+	right: 2px;
+	top: 71px; /* TODO 90px?? */
+	text-transform: uppercase;
+}
+
+#language-choices a { 
+	color: #3291b0;
+	background: transparent;
+	margin-left: 10px;
+}
+
+a.current_lang, a:visited.current_lang {
+	text-decoration: none;
+	color: #74b8ce;
+}
+
+.no-style {
+	margin: 0;
+	padding: 0;
+	line-height: 30px;
+	list-style-type: none;
+}
+
+ul.properties li {
+	padding-left: 10px;
+}
+
+table.listing td.noborder { padding: 0; margin: 0; margin-bottom: 1em;}
+
+ul.even li {
+	border-top: 1px solid #e5e5e5;
+	height: 30px;
+	padding-left: 40px;
+}
+
+ul.odd li {
+	border-top: 1px solid #fff;
+	height: 30px;
+	padding-left: 40px;
+}
+
+ul.no_top_border li:first-child {
+        border: none;
+}
+
+.property_title {
+	width: 250px;
+	display: inline-block;
+}
+
+/*input[type=submit], button, a.button {
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3c9cb8', endColorstr='#2d88a8');
+	background: -webkit-gradient(linear, left top, left bottom, from(#3c9cb8), to(#2d88a8));
+	color: #fff;
+	border: none;
+	line-height: 25px;
+}*/
+
+.property_value {
+
+}
+
+#mapfull {
+	margin-top: 120px;
+}
+
+img { 
+	border: 0;
+}
+
+.formrow > label, .formrow >.txtlabel {
+	float: left;
+	width: 140px;
+}
+
+.formrow > select, .formrow >.txtvalue {
+	float: left;
+	width: 140px;
+	margin-right: 12px;
+}
+
+
+.formrow > input {
+	float: left;
+	margin-right: 1em;
+}
+
+.optional {
+	color: #999;	
+}
+
+.formrow, .formsinglerow {
+	display: block;
+	clear: both;
+	height: 25px;
+}
+
+  
+form > fieldset {
+	border: none;
+	margin: 1em 0 1em 0;	
+}
+
+.submitrow {
+	margin-top: 1em;
+}
+
+.form_error {
+	color: #f00;
+}
+
+.formrow > .form_error {
+	display: block;
+	clear: both;
+}
+
+
+legend {
+	margin-left: 0;
+	padding-left: 0;
+	font-weight: bold;
+	margin-bottom: 0.5em;
+}

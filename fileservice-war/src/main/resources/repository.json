@@ -1,0 +1,72 @@
+{
+    "name" : "file_service",
+    "jndiName" : "",
+    "monitoring" : {
+        "enabled" : true
+    },
+    "workspaces" : {
+        "default" : "default",
+        "allowCreation" : false,
+        "initialContent" : {
+        	"default" : "import/meta.xml"
+        }
+    },
+    "node-types" : [ "metadata.cnd" ],
+    "storage" : {
+        "cacheConfiguration" : "infinispan-cache.xml",
+        "cacheName" : "persistentRepository",
+        "binaryStorage" : {
+            "minimumBinarySizeInBytes" : 4096,
+            "minimumStringSize" : 4096,
+            "type" : "file",
+            "directory" : "binary"
+        }
+    },
+    "externalSources" : {
+        "lataamo" : {
+            "classname" : "org.modeshape.connector.filesystem.FileSystemConnector",
+            "directoryPath" : "/data/external",
+            "projections" :  [ "default:/tuotteet => /" ],
+            "addMimeTypeMixin" : true,
+            "contentBasedSha1": false,
+            "cacheTtlSeconds" : 360,
+            "exclusionPattern" : ".+[.]tmp$",
+			"extraPropertiesStorage" : "json"
+        }
+    },
+    "security" : {
+        "providers" : [
+            {
+                "classname" : "fi.nls.modeshape.jcr.security.ExternalAuthenticationProvider",
+                "dataSourceName" : "java:comp/env/jdbc/tiepaldb"
+            }, { 
+                "classname" : "fi.nls.modeshape.jcr.security.TokenAuthenticationProvider",
+                "dataSourceName" : "java:comp/env/jdbc/tiepaldb",
+            }
+        ]
+    },
+    "query" : {
+        "enabled" : true,
+        "indexStorage" : {
+            "type" : "filesystem",
+            "location" : "/data/index"
+        },
+        "indexing" : {
+            "rebuildOnStartup": {
+                "when" : "if_missing",
+                "includeSystemContent": true,
+                "mode": "async"
+            },
+            "threadPool" : "modeshape-workers",
+            "analyzer" : "org.apache.lucene.analysis.standard.StandardAnalyzer",
+            "similarity" : "org.apache.lucene.search.DefaultSimilarity",
+            "indexFormat" : "LUCENE_CURRENT",
+            "readerStrategy" : "shared",
+            "backend" : {
+                "type" : "lucene"
+            },
+            "batchSize" : -1,
+            "mode" : "sync"
+        }
+    }
+}

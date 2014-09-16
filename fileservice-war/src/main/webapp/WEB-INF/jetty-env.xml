@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configure id='wac' class="org.eclipse.jetty.webapp.WebAppContext">
+
+	<New id="modeshape" class="org.eclipse.jetty.plus.jndi.Resource">
+		<Arg>
+			<Ref id="wac" />
+		</Arg>
+		<Arg>jcr/local</Arg>
+		<Arg>
+			<New class="javax.naming.Reference" id="reference">
+				<Arg>javax.jcr.Repository</Arg>
+				<Arg>org.modeshape.jcr.JndiRepositoryFactory</Arg>
+				<Arg>null</Arg>
+				<Call name="add" id="reference">
+					<Arg>
+						<New class="javax.naming.StringRefAddr">
+							<Arg>configFile</Arg>
+							<Arg>/configRepository-jetty.xml</Arg>
+						</New>
+					</Arg>
+				</Call>
+				<!-- <Call name="add" id="reference">
+					<Arg>
+						<New class="javax.naming.StringRefAddr">
+							<Arg>repositoryName</Arg>
+							<Arg>aineistot</Arg>
+						</New>
+					</Arg> 
+				</Call>-->
+			</New>
+		</Arg>
+	</New>
+
+	<New id="DSTest" class="org.eclipse.jetty.plus.jndi.Resource">
+     <Arg></Arg>
+     <Arg>jdbc/MySQL</Arg>
+     <Arg>
+         <New class="org.apache.commons.dbcp.BasicDataSource">
+            <Set name="driverClassName">com.mysql.jdbc.Driver</Set>
+            <Set name="url">jdbc:mysql://localhost:3306/tiepal</Set>
+            <Set name="username">root</Set>
+            <Set name="password">mysli</Set>
+         </New>
+     </Arg>
+    </New>
+
+</Configure>

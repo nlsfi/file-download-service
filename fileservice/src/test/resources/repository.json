@@ -1,0 +1,72 @@
+{
+    "name" : "aineistot",
+    "jndiName" : "",
+    "monitoring" : {
+        "enabled" : true
+    },
+    "workspaces" : {
+        "default" : "default",
+        "allowCreation" : false,
+        "initialContent" : {
+        	"default" : "import/meta.xml"
+        }
+    },
+    "node-types" : [ "metadata.cnd" ],
+    "storage" : {
+        "cacheConfiguration" : "infinispan-cache.xml",
+        "cacheName" : "persistentRepository",
+        "binaryStorage" : {
+            "minimumBinarySizeInBytes" : 4096,
+            "minimumStringSize" : 4096,
+            "type" : "file",
+            "directory" : "binary"
+        }
+    },
+    "externalSources": {
+        "lataamo": {
+            "classname": "org.modeshape.connector.filesystem.FileSystemConnector",
+            "directoryPath": "target/test-classes/repository/workspace/",
+            "projections": [
+                "default:/tuotteet => /"
+            ],
+            "readonly": false,
+            "addMimeTypeMixin": true,
+            "exclusionPattern": ".+[.]tmp$",
+            "extraPropertiesStorage": "json"
+        }
+    },
+    "security" : {
+        "providers" : [
+            {
+                "classname" : "fi.nls.fileservice.jcr.repository.DummyAuthenticationProvider"
+            }
+        ]
+    },
+    "query" : {
+        "enabled" : true,
+        "indexStorage" : {
+            "type" : "filesystem",
+            "location" : "target/test-classes/index",
+            "lockingStrategy" : "simple",
+            "fileSystemAccessType" : "auto"
+        },
+        "indexing" : {
+            "rebuildOnStartup": {
+                "when" : "if_missing",
+                "includeSystemContent": true,
+                "mode": "sync"
+            },
+            "threadPool" : "modeshape-workers",
+            "analyzer" : "org.apache.lucene.analysis.standard.StandardAnalyzer",
+            "similarity" : "org.apache.lucene.search.DefaultSimilarity",
+            "indexFormat" : "LUCENE_CURRENT",
+            "readerStrategy" : "shared",
+            "locking" : "simple",
+            "backend" : {
+                "type" : "lucene"
+            },
+            "batchSize" : -1,
+            "mode" : "sync"
+        }
+    }
+}

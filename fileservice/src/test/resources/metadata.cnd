@@ -1,0 +1,52 @@
+<nt='http://www.jcp.org/jcr/nt/1.0'>
+<nls='http://www.nls.fi/jcr/2012'>
+<gmd='http://www.isotc211.org/2005/gmd'>
+
+[nls:dataset] > nt:unstructured
+ - nls:published (BOOLEAN)
+ - nls:license (STRING)
+ - gmd:fileIdentifier (STRING)
+ - gmd:distributionFormat (STRING) multiple
+  
+[nls:retention] mixin
+ - nls:expires (LONG)
+
+[nls:datasetfile] mixin
+ - nls:gridCell (STRING)
+ - nls:gridSystem (STRING)
+ - nls:gridScale (LONG)
+ - nls:wmsLayer (STRING)
+ - nls:category (STRING) multiple
+ - nls:dataset (STRING)
+ - nls:datasetVersion (STRING)
+ - nls:related (STRING) multiple
+ - nls:crs (STRING)
+ - nls:year (LONG)
+ - nls:info (STRING)
+ - nls:fileVersion (LONG)
+ - nls:elevationModel (STRING)
+ - nls:fileChanged (DATE)
+ - nls:prevModified (DATE)
+  
+[gmd:metadata] mixin
+ - gmd:fileIdentifier (STRING)
+ - gmd:title (STRING) multiple
+ - gmd:distributionFormat (STRING) multiple
+
+[nls:orthophoto] mixin
+ - nls:orthophotoYear (LONG)
+ - nls:orthophotoID (LONG)
+ 
+[nls:lidar] mixin
+ - nls:lidarYear (LONG)
+ - nls:project (STRING)
+ - nls:scanner (STRING)
+ - nls:multipulse (STRING)
+ - nls:dateOfScan (DATE)
+ - nls:pointDensity (DOUBLE)
+ - nls:pointCloudID (STRING)
+ - nls:flightAltitude (LONG)
+ - nls:elevationAccuracy (DOUBLE)
+ - nls:timeWindow (STRING)
+
+ 

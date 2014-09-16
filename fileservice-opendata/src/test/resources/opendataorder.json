@@ -1,0 +1,14 @@
+{
+    "customer": {
+      "firstName": "Erkki",
+      "lastName": "Esimerkki",
+      "organisation": null,
+      "email": "erkki.esimerkki@firma.fi",
+      "language": "fi",
+      "licenceAccepted" : true
+    },
+    "files": [
+		 "\/tuotteet\/nimisto\/karttanimet_250\/etrs89\/gml\/karttanimet_250_2012_02.zip",
+		 "\/tuotteet\/nimisto\/paikat\/etrs89\/gml\/paikat_2012_02.zip"
+    ]
+  }

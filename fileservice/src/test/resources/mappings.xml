@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+<util:map id="mimeTypeMappings"> 
+	<entry key="application/x-laz" value="LAZ"/>
+	<entry key="image/tiff" value="TIFF"/>
+	<entry key="image/png" value="PNG"/>
+	<entry key="image/jp2" value="JPEG2000"/>
+	<entry key="application/x-shapefile" value="ESRI shape"/>
+	<entry key="application/x-mapinfo-mif" value="MapInfo mif"/>
+	<entry key="application/gml+xml" value="XML/GML"/>
+	<entry key="application/x-ascii-grid" value="ascii grid"/>
+	<entry key="application/x-ascii-xyz" value="ascii xyz"/>
+	<entry key="text/plain" value="TXT"/>
+</util:map>
+
+<util:map id="reverseMimeTypeMappings"> 
+	<entry value="application/x-laz" key="LAZ"/>
+	<entry value="image/tiff" key="TIFF"/>
+	<entry value="image/png" key="PNG"/>
+	<entry value="image/jp2" key="JPEG2000"/>
+	<entry value="application/x-shapefile" key="ESRI shape"/>
+	<entry value="application/x-mapinfo-mif" key="MapInfo mif"/>
+	<entry value="application/gml+xml" key="XML/GML"/>
+	<entry value="application/x-ascii-grid" key="ascii grid"/>
+	<entry value="application/x-ascii-xyz" key="ascii xyz"/>
+	<entry value="text/plain" key="TXT"/>
+</util:map>
+
+<util:map id="crsMappings">
+	<entry key="EPSG:3067" value="etrs-tm35fin"/>
+	<entry key="urn:ogc:def:crs:EPSG::3067" value="etrs-tm35fin"/>
+</util:map>
+
+<util:map id="crsDefinitions">
+	<entry key="etrs-tm35fin">
+		<bean class="fi.nls.fileservice.dataset.crs.CrsDefinition">
+			<property name="crsId" value="etrs-tm35fin"/>
+			<property name="epsgId" value="EPSG:3067"/>	
+			<property name="inspireUri" value="http://www.opengis.net/def/crs/EPSG/0/3067"/>
+			<property name="inspireLabel" value="ETRS89 / ETRS-TM35FIN"/>
+			<property name="grids">
+				<map>
+					<entry key="3x3">
+						<bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
+							<property name="gridSize" value="3x3"/>
+							<property name="crs" value="etrs-tm35fin"/>
+							<property name="minGridScale" value="500"/>
+							<property name="maxGridScale" value="200000"/>
+						</bean>
+					</entry>
+					<entry key="6x6">
+						<bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
+							<property name="gridSize" value="6x6"/>
+							<property name="crs" value="etrs-tm35fin"/>
+							<property name="minGridScale" value="500"/>
+							<property name="maxGridScale" value="400000"/>
+						</bean>
+					</entry>
+					<entry key="12x12">
+						<bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
+							<property name="gridSize" value="12x12"/>
+							<property name="crs" value="etrs-tm35fin"/>
+							<property name="minGridScale" value="500"/>
+							<property name="maxGridScale" value="500000"/>
+						</bean>
+					</entry>
+					<entry key="12x24">
+						<bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
+							<property name="gridSize" value="12x24"/>
+							<property name="crs" value="etrs-tm35fin"/>
+							<property name="minGridScale" value="500"/>
+							<property name="maxGridScale" value="500000"/>
+						</bean>
+					</entry>
+					<entry key="24x24">
+						<bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
+							<property name="gridSize" value="24x24"/>
+							<property name="crs" value="etrs-tm35fin"/>
+							<property name="minGridScale" value="500"/>
+							<property name="maxGridScale" value="2000000"/>
+						</bean>
+					</entry>
+					<entry key="24x48">
+						<bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
+							<property name="gridSize" value="24x48"/>
+							<property name="crs" value="etrs-tm35fin"/>
+							<property name="minGridScale" value="500"/>
+							<property name="maxGridScale" value="2000000"/>
+						</bean>
+					</entry>
+					<entry key="48x48">
+						<bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
+							<property name="gridSize" value="48x48"/>
+							<property name="crs" value="etrs-tm35fin"/>
+							<property name="minGridScale" value="500"/>
+							<property name="maxGridScale" value="4000000"/>
+						</bean>
+					</entry>
+					<entry key="96x96">
+						<bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
+							<property name="gridSize" value="96x96"/>
+							<property name="crs" value="etrs-tm35fin"/>
+							<property name="minGridScale" value="500"/>
+							<property name="maxGridScale" value="4000000"/>
+						</bean>
+					</entry>
+				</map>
+			</property>
+		</bean>
+	</entry>
+</util:map>
+
+</beans>
