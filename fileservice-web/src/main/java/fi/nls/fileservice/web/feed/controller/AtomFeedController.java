@@ -52,8 +52,7 @@ import fi.nls.fileservice.web.feed.atom.builder.MtpServiceFeedBuilder;
 @RequestMapping("/feed")
 public class AtomFeedController {
 
-    private static final Logger logger = LoggerFactory
-            .getLogger(AtomFeedController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AtomFeedController.class);
 
     @Inject
     private DatasetService datasetService;
@@ -89,8 +88,7 @@ public class AtomFeedController {
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
     }
 
-    @RequestMapping(value = { "/mtp/{datasetName}/{datasetVersionName}",
-            "/protectedmtp/{datasetName}/{datasetVersionName}" }, produces = "application/atom+xml; charset=utf-8")
+    @RequestMapping(value="/mtp/{datasetName}/{datasetVersionName}", produces="application/atom+xml; charset=utf-8")
     public ResponseEntity<Feed> mtpDatasetFeed(
             @PathVariable(value = "datasetName") String datasetName,
             @PathVariable(value = "datasetVersionName") String datasetVersionName,
@@ -121,8 +119,7 @@ public class AtomFeedController {
                 limit = maxEntriesPerPage;
             }
 
-            uriComponentsBuilder.pathSegment("feed", "mtp", datasetName,
-                    datasetVersionName);
+            uriComponentsBuilder.pathSegment("feed", "mtp", datasetName, datasetVersionName);
 
             if (apiKey != null) {
                 uriComponentsBuilder.queryParam("api_key", apiKey);
@@ -178,20 +175,18 @@ public class AtomFeedController {
             Feed feed = builder.getFeed();
 
             HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.add("Content-Type",
-                    "application/atom+xml; charset=utf-8");
+            responseHeaders.add("Content-Type", "application/atom+xml; charset=utf-8");
             return new ResponseEntity<Feed>(feed, responseHeaders,
                     HttpStatus.OK);
         }
 
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add("Content-Type",
-                "application/atom+xml; charset=utf-8");
+        responseHeaders.add("Content-Type", "application/atom+xml; charset=utf-8");
         return new ResponseEntity<Feed>(new Feed(), responseHeaders,
                 HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping(value = { "/mtp", "/protectedmtp" }, produces = "application/atom+xml; charset=utf-8")
+    @RequestMapping(value="/mtp", produces="application/atom+xml; charset=utf-8")
     public ResponseEntity<Feed> mtpDownloadServiceFeed(
             @RequestParam(value = "api_key", required = false) String apiKey,
             @RequestParam(value = "lang", required = false) String lang,
@@ -217,7 +212,7 @@ public class AtomFeedController {
                 uriComponentsBuilder, locale);
     }
 
-    @RequestMapping(value = "/inspire", produces = "application/atom+xml; charset=utf-8")
+    @RequestMapping(value="/inspire", produces="application/atom+xml; charset=utf-8")
     public ResponseEntity<Feed> inspireDownloadServiceFeed(
             @RequestParam(value = "lang", required = false) String lang,
             UriComponentsBuilder uriComponentsBuilder, Locale locale) {
@@ -258,13 +253,12 @@ public class AtomFeedController {
         Feed feed = feedBuilder.getFeed();
 
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add("Content-Type",
-                "application/atom+xml; charset=utf-8");
+        responseHeaders.add("Content-Type", "application/atom+xml; charset=utf-8");
         return new ResponseEntity<Feed>(feed, responseHeaders, HttpStatus.OK);
 
     }
 
-    @RequestMapping(value = "/inspire/{dataset}/{datasetVersion}", produces = "application/atom+xml; charset=utf-8")
+    @RequestMapping(value="/inspire/{dataset}/{datasetVersion}", produces="application/atom+xml; charset=utf-8")
     public ResponseEntity<Feed> inspireDatasetFeed(
             @PathVariable("dataset") String datasetName,
             @PathVariable("datasetVersion") String datasetVersionName,
@@ -284,17 +278,13 @@ public class AtomFeedController {
             Feed feed = bb.getFeed();
 
             HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.add("Content-Type",
-                    "application/atom+xml; charset=utf-8");
-            return new ResponseEntity<Feed>(feed, responseHeaders,
-                    HttpStatus.OK);
+            responseHeaders.add("Content-Type", "application/atom+xml; charset=utf-8");
+            return new ResponseEntity<Feed>(feed, responseHeaders, HttpStatus.OK);
         }
 
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add("Content-Type",
-                "application/atom+xml; charset=utf-8");
-        return new ResponseEntity<Feed>(new Feed(), responseHeaders,
-                HttpStatus.NOT_FOUND);
+        responseHeaders.add("Content-Type", "application/atom+xml; charset=utf-8");
+        return new ResponseEntity<Feed>(new Feed(), responseHeaders, HttpStatus.NOT_FOUND);
 
     }
 
