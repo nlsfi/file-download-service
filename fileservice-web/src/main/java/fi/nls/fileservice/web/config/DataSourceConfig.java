@@ -1,7 +1,10 @@
 package fi.nls.fileservice.web.config;
 
 import java.util.Iterator;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
+import javax.annotation.PreDestroy;
 import javax.jcr.Repository;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -16,18 +19,14 @@ import org.springframework.jndi.JndiTemplate;
 
 @Configuration
 public class DataSourceConfig {
-
-    @Bean(destroyMethod = "shutdown")
-    public ModeShapeEngine modeshapeEngine() {
-        ModeShapeEngine engine = new ModeShapeEngine();
-        engine.start();
-        return engine;
-    }
+    
+    private ModeShapeEngine modeshapeEngine;
 
     @Bean
     public Repository repository() {
 
-        ModeShapeEngine engine = modeshapeEngine();
+        this.modeshapeEngine = new ModeShapeEngine();
+        this.modeshapeEngine.start();
 
         try {
             RepositoryConfiguration config = RepositoryConfiguration.read(
@@ -40,11 +39,8 @@ public class DataSourceConfig {
                 while (probIter.hasNext()) {
                     System.err.println(probIter.next().getMessage());
                 }
-                throw new RuntimeException("Problems with JCR configuration.");
             }
-
-            javax.jcr.Repository repo = engine.deploy(config);
-            return repo;
+            return modeshapeEngine.deploy(config);
         } catch (Exception e) {
             throw new RuntimeException("Unable to load JCR repository", e);
         }
@@ -54,10 +50,21 @@ public class DataSourceConfig {
     public DataSource orderDataSource() {
         JndiTemplate template = new JndiTemplate();
         try {
-            return template.lookup("java:comp/env/jdbc/tiepaldb",
-                    DataSource.class);
+            return template.lookup("java:comp/env/jdbc/tiepaldb", DataSource.class);
         } catch (NamingException e) {
             throw new RuntimeException(e);
+        }
+    }
+    
+    @PreDestroy
+    public void shutdown() {
+        if (this.modeshapeEngine != null) {
+            Future<Boolean> future = this.modeshapeEngine.shutdown();
+            try {
+                future.get(); // wait for repository to properly shutdown
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
         }
     }
 
