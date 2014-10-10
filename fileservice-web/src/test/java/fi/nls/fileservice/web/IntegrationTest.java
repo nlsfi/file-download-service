@@ -114,7 +114,7 @@ public class IntegrationTest {
     @Test
     public void testCreateAndDeleteFile() {
         byte[] data = "test\r\n".getBytes();
-        String path = fileService.saveFile("/", "testi.txt", new ByteArrayInputStream(data));
+        String path = fileService.saveFile("/tuotteet", "testi.txt", new ByteArrayInputStream(data));
         fileService.delete(path);
         
     }
