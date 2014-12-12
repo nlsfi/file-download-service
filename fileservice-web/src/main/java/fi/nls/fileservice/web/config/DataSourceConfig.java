@@ -13,14 +13,19 @@ import org.modeshape.common.collection.Problem;
 import org.modeshape.common.collection.Problems;
 import org.modeshape.jcr.ModeShapeEngine;
 import org.modeshape.jcr.RepositoryConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.jndi.JndiTemplate;
 
 @Configuration
 public class DataSourceConfig {
     
     private ModeShapeEngine modeshapeEngine;
+
+    @Autowired
+    private Environment env;
 
     @Bean
     public Repository repository() {
@@ -29,6 +34,13 @@ public class DataSourceConfig {
         this.modeshapeEngine.start();
 
         try {
+            // FIXME: Setup lock store location for JBoss Transaction Service
+            // without this ${user.home} is used to which the application server may not
+            // have write permissions
+            String tempDir = env.getProperty("java.io.tmpdir");
+            System.setProperty("com.arjuna.ats.arjuna.objectstore.objectStoreDir", tempDir);
+            System.setProperty("ObjectStoreEnvironmentBean.objectStoreDir", tempDir);
+
             RepositoryConfiguration config = RepositoryConfiguration.read(
                     Thread.currentThread().getContextClassLoader()
                             .getResourceAsStream("repository.json"),"file_service");

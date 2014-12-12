@@ -8,7 +8,7 @@
         "default" : "default",
         "allowCreation" : false,
         "initialContent" : {
-        	"default" : "import/meta.xml"
+            "default" : "import/meta.xml"
         }
     },
     "node-types" : [ "metadata.cnd" ],
@@ -29,9 +29,9 @@
             "projections" :  [ "default:/tuotteet => /" ],
             "addMimeTypeMixin" : true,
             "contentBasedSha1": false,
-            "cacheTtlSeconds" : 360,
+            "cacheTtlSeconds" : 3600,
             "exclusionPattern" : ".+[.]tmp$",
-			"extraPropertiesStorage" : "json"
+            "extraPropertiesStorage" : "json"
         }
     },
     "security" : {
@@ -41,7 +41,7 @@
                 "dataSourceName" : "java:comp/env/jdbc/tiepaldb"
             }, { 
                 "classname" : "fi.nls.modeshape.jcr.security.TokenAuthenticationProvider",
-                "dataSourceName" : "java:comp/env/jdbc/tiepaldb",
+                "dataSourceName" : "java:comp/env/jdbc/tiepaldb"
             }
         ]
     },

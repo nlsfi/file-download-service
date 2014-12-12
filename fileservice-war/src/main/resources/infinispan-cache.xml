@@ -12,8 +12,9 @@
   </default>
   <!-- Individually named caches. -->
   <namedCache name="persistentRepository">
-          <transaction
-                transactionManagerLookupClass="org.infinispan.transaction.lookup.DummyTransactionManagerLookup"
+    <eviction strategy="LIRS" maxEntries="10000"/>
+        <transaction
+                transactionManagerLookupClass="org.infinispan.transaction.lookup.JBossStandaloneJTAManagerLookup"
                 transactionMode="TRANSACTIONAL"
                 lockingMode="OPTIMISTIC"/>
       <loaders
