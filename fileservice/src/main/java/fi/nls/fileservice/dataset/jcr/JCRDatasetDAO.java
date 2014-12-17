@@ -153,11 +153,14 @@ public class JCRDatasetDAO implements DatasetDAO {
 
                     String crsString = crs.getName().replaceAll("\\$", ":");
                     CrsDefinition def = this.crsDefinitions.get(crsString);
+                    if (def == null) {
+                        logger.error("CRS definition not found with id {}", crsString);
+                        continue;
+                    }
 
                     DatasetGridDefinition gridDef = null;
                     if (crs.hasProperty(DatasetProperty.NLS_GRIDSIZE)) {
-                        String gridSize = crs.getProperty(
-                                DatasetProperty.NLS_GRIDSIZE).getString();
+                        String gridSize = crs.getProperty(DatasetProperty.NLS_GRIDSIZE).getString();
                         if (!"None".equals(gridSize)) {
                             gridDef = def.getGrids().get(gridSize);
                         }
@@ -169,7 +172,7 @@ public class JCRDatasetDAO implements DatasetDAO {
                         datasetVersion.setSingleFile(true);
                     }
 
-                    datasetVersion.getGridDefs().add(gridDef);
+                    datasetVersion.getGridDefinitions().add(gridDef);
                 }
             }
         }
@@ -410,7 +413,7 @@ public class JCRDatasetDAO implements DatasetDAO {
                 DatasetProperty.CRS, NodeType.NT_UNSTRUCTURED);
 
         Set<String> crsIds = new HashSet<String>();
-        List<DatasetGridDefinition> griddefs = datasetVersion.getGridDefs();
+        List<DatasetGridDefinition> griddefs = datasetVersion.getGridDefinitions();
         if (griddefs != null && griddefs.size() > 0) {
             for (DatasetGridDefinition gd : griddefs) {
                 if (gd.getCrs() != null && gd.getCrs().length() > 0) {

@@ -2,6 +2,7 @@ package fi.nls.fileservice.dataset;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -11,6 +12,8 @@ public class DatasetGridDefinition {
     @NotNull
     private String crs;
 
+    private String label;    
+    
     private String crsLabel;
 
     private int gridScale;
@@ -27,6 +30,18 @@ public class DatasetGridDefinition {
         this.crs = crs;
     }
 
+    @JsonIgnore
+    public String getLabel() {
+        if (this.label == null) {
+            return this.gridSize;
+        }
+        return this.label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+    
     public String getCrsLabel() {
         return crsLabel;
     }

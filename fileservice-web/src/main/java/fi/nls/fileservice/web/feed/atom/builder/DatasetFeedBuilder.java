@@ -114,7 +114,7 @@ public class DatasetFeedBuilder extends InspireAtomFeedBuilder {
     @Override
     public void buildEntries(Feed feed) {
         List<DatasetGridDefinition> gridDefinitions = datasetVersion
-                .getGridDefs();
+                .getGridDefinitions();
         List<String> formats = datasetVersion.getFormats();
         for (DatasetGridDefinition gridDef : gridDefinitions) {
             for (String format : formats) {

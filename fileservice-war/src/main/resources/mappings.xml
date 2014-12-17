@@ -38,98 +38,115 @@
 </util:map>
 
 <util:map id="crsDefinitions">
-	<entry key="etrs-tm35fin">
-		<bean class="fi.nls.fileservice.dataset.crs.CrsDefinition">
-			<property name="crsId" value="etrs-tm35fin"/>
-			<property name="epsgId" value="EPSG:3067"/>	
-			<property name="inspireUri" value="http://www.opengis.net/def/crs/EPSG/0/3067"/>
-			<property name="inspireLabel" value="ETRS89 / ETRS-TM35FIN"/>
-			<property name="grids">
-				<map>
-					<entry key="3x3">
-						<bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
-							<property name="gridSize" value="3x3"/>
-							<property name="crs" value="etrs-tm35fin"/>
-							<property name="minGridScale" value="500"/>
-							<property name="maxGridScale" value="200000"/>
-						</bean>
-					</entry>
-					<entry key="6x6">
-						<bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
-							<property name="gridSize" value="6x6"/>
-							<property name="crs" value="etrs-tm35fin"/>
-							<property name="minGridScale" value="500"/>
-							<property name="maxGridScale" value="400000"/>
-						</bean>
-					</entry>
-					<entry key="12x12">
-						<bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
-							<property name="gridSize" value="12x12"/>
-							<property name="crs" value="etrs-tm35fin"/>
-							<property name="minGridScale" value="500"/>
-							<property name="maxGridScale" value="500000"/>
-						</bean>
-					</entry>
-					<entry key="12x24">
-						<bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
-							<property name="gridSize" value="12x24"/>
-							<property name="crs" value="etrs-tm35fin"/>
-							<property name="minGridScale" value="500"/>
-							<property name="maxGridScale" value="500000"/>
-						</bean>
-					</entry>
-					<entry key="24x24">
-						<bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
-							<property name="gridSize" value="24x24"/>
-							<property name="crs" value="etrs-tm35fin"/>
-							<property name="minGridScale" value="500"/>
-							<property name="maxGridScale" value="2000000"/>
-						</bean>
-					</entry>
-					<entry key="24x48">
-						<bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
-							<property name="gridSize" value="24x48"/>
-							<property name="crs" value="etrs-tm35fin"/>
-							<property name="minGridScale" value="500"/>
-							<property name="maxGridScale" value="2000000"/>
-						</bean>
-					</entry>
-					<entry key="48x48">
-						<bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
-							<property name="gridSize" value="48x48"/>
-							<property name="crs" value="etrs-tm35fin"/>
-							<property name="minGridScale" value="500"/>
-							<property name="maxGridScale" value="4000000"/>
-						</bean>
-					</entry>
-					<entry key="48x96">
-						<bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
-							<property name="gridSize" value="48x96"/>
-							<property name="crs" value="etrs-tm35fin"/>
-							<property name="minGridScale" value="500"/>
-							<property name="maxGridScale" value="4000000"/>
-						</bean>
-					</entry>
-					<entry key="96x96">
-						<bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
-							<property name="gridSize" value="96x96"/>
-							<property name="crs" value="etrs-tm35fin"/>
-							<property name="minGridScale" value="500"/>
-							<property name="maxGridScale" value="4000000"/>
-						</bean>
-					</entry>
-					<entry key="96x192">
-						<bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
-							<property name="gridSize" value="96x192"/>
-							<property name="crs" value="etrs-tm35fin"/>
-							<property name="minGridScale" value="500"/>
-							<property name="maxGridScale" value="4000000"/>
-						</bean>
-					</entry>
-				</map>
-			</property>
-		</bean>
-	</entry>
+    <entry key="etrs-tm35fin">
+        <bean class="fi.nls.fileservice.dataset.crs.CrsDefinition">
+            <property name="crsId" value="etrs-tm35fin"/>
+            <property name="epsgId" value="EPSG:3067"/> 
+            <property name="inspireUri" value="http://www.opengis.net/def/crs/EPSG/0/3067"/>
+            <property name="inspireLabel" value="ETRS89 / ETRS-TM35FIN"/>
+            <property name="grids">
+                <map>
+                    <entry key="None">
+                        <bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
+                            <property name="gridSize" value="None"/>
+                            <property name="label" value="Ei lehtijakoa"/>
+                            <property name="crs" value="etrs-tm35fin"/>
+                        </bean>
+                    </entry>
+                    <entry key="3x3">
+                        <bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
+                            <property name="gridSize" value="3x3"/>
+                            <property name="label" value="3 km x 3 km (1:5000)"/>
+                            <property name="crs" value="etrs-tm35fin"/>
+                            <property name="minGridScale" value="500"/>
+                            <property name="maxGridScale" value="200000"/>
+                        </bean>
+                    </entry>
+                    <entry key="6x6">
+                        <bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
+                            <property name="gridSize" value="6x6"/>
+                            <property name="label" value="6 km x 6 km (1:10000)"/>
+                            <property name="crs" value="etrs-tm35fin"/>
+                            <property name="minGridScale" value="500"/>
+                            <property name="maxGridScale" value="400000"/>
+                        </bean>
+                    </entry>
+                    <entry key="12x12">
+                        <bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
+                            <property name="gridSize" value="12x12"/>
+                            <property name="label" value="12 km x 12 km (1:25000)"/>
+                            <property name="crs" value="etrs-tm35fin"/>
+                            <property name="minGridScale" value="500"/>
+                            <property name="maxGridScale" value="500000"/>
+                        </bean>
+                    </entry>
+                    <entry key="12x24">
+                        <bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
+                            <property name="gridSize" value="12x24"/>
+                            <property name="label" value="12 km x 24 km (1:25000)"/>
+                            <property name="crs" value="etrs-tm35fin"/>
+                            <property name="minGridScale" value="500"/>
+                            <property name="maxGridScale" value="500000"/>
+                        </bean>
+                    </entry>
+                    <entry key="24x24">
+                        <bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
+                            <property name="gridSize" value="24x24"/>
+                            <property name="label" value="24 km x 24 km (1:50000)"/>
+                            <property name="crs" value="etrs-tm35fin"/>
+                            <property name="minGridScale" value="500"/>
+                            <property name="maxGridScale" value="2000000"/>
+                        </bean>
+                    </entry>
+                    <entry key="24x48">
+                        <bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
+                            <property name="gridSize" value="24x48"/>
+                            <property name="label" value="24 km x 48 km (1:50000)"/>
+                            <property name="crs" value="etrs-tm35fin"/>
+                            <property name="minGridScale" value="500"/>
+                            <property name="maxGridScale" value="2000000"/>
+                        </bean>
+                    </entry>
+                    <entry key="48x48">
+                        <bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
+                            <property name="gridSize" value="48x48"/>
+                            <property name="label" value="48 km x 48 km (1:100000)"/>
+                            <property name="crs" value="etrs-tm35fin"/>
+                            <property name="minGridScale" value="500"/>
+                            <property name="maxGridScale" value="4000000"/>
+                        </bean>
+                    </entry>
+                    <entry key="48x96">
+                        <bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
+                            <property name="gridSize" value="48x96"/>
+                            <property name="label" value="48 km x 96 km (1:100000)"/>
+                            <property name="crs" value="etrs-tm35fin"/>
+                            <property name="minGridScale" value="500"/>
+                            <property name="maxGridScale" value="4000000"/>
+                        </bean>
+                    </entry>
+                    <entry key="96x96">
+                        <bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
+                            <property name="gridSize" value="96x96"/>
+                            <property name="label" value="96 km x 96 km (1:200000)"/>
+                            <property name="crs" value="etrs-tm35fin"/>
+                            <property name="minGridScale" value="500"/>
+                            <property name="maxGridScale" value="4000000"/>
+                        </bean>
+                    </entry>
+                    <entry key="96x192">
+                        <bean class="fi.nls.fileservice.dataset.DatasetGridDefinition">
+                            <property name="gridSize" value="96x192"/>
+                            <property name="label" value="96 km x 192 km (1:200000)"/>
+                            <property name="crs" value="etrs-tm35fin"/>
+                            <property name="minGridScale" value="500"/>
+                            <property name="maxGridScale" value="4000000"/>
+                        </bean>
+                    </entry>
+                </map>
+            </property>
+        </bean>
+    </entry>
 </util:map>
 
 </beans>

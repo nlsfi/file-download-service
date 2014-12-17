@@ -217,7 +217,7 @@ public class JCRDatasetDAOTest {
         DatasetGridDefinition gridDef = new DatasetGridDefinition();
         gridDef.setCrs("etrs-tm35fin");
         gridDef.setGridSize("6x6");
-        version.getGridDefs().add(gridDef);
+        version.getGridDefinitions().add(gridDef);
         dao.saveDatasetVersion(dataset.getName(), version, session);
 
         session.save();
@@ -231,10 +231,10 @@ public class JCRDatasetDAOTest {
         assertEquals("ortokuva", version.getWmsLayer());
         assertEquals("500", version.getWmsMinScale());
         assertEquals("20000", version.getWmsMaxScale());
-        assertEquals(1, version.getGridDefs().size());
-        assertEquals("etrs-tm35fin", version.getGridDefs().get(0).getCrs());
-        assertEquals("6x6", version.getGridDefs().get(0).getGridSize());
-        assertEquals(0, version.getGridDefs().get(0).getGridScale());
+        assertEquals(1, version.getGridDefinitions().size());
+        assertEquals("etrs-tm35fin", version.getGridDefinitions().get(0).getCrs());
+        assertEquals("6x6", version.getGridDefinitions().get(0).getGridSize());
+        assertEquals(0, version.getGridDefinitions().get(0).getGridScale());
 
         assertEquals(3, version.getTranslatedTitles().size());
         assertEquals("väriorto", version.getTranslatedTitles().get("fi"));
@@ -260,7 +260,7 @@ public class JCRDatasetDAOTest {
         DatasetGridDefinition gridDef = new DatasetGridDefinition();
         gridDef.setCrs("etrs-tm35fin");
         gridDef.setGridSize("None");
-        version.getGridDefs().add(gridDef);
+        version.getGridDefinitions().add(gridDef);
         dao.saveDatasetVersion(dataset.getFileIdentifier(), version, session);
 
         session.save();
@@ -271,10 +271,10 @@ public class JCRDatasetDAOTest {
         assertEquals(dataset.getFileIdentifier(), version.getDataset()
                 .getFileIdentifier());
         assertEquals("orto", version.getName());
-        assertEquals(1, version.getGridDefs().size());
-        assertEquals("etrs-tm35fin", version.getGridDefs().get(0).getCrs());
-        assertNull(version.getGridDefs().get(0).getGridSize());
-        assertEquals(0, version.getGridDefs().get(0).getGridScale());
+        assertEquals(1, version.getGridDefinitions().size());
+        assertEquals("etrs-tm35fin", version.getGridDefinitions().get(0).getCrs());
+        assertNull(version.getGridDefinitions().get(0).getGridSize());
+        assertEquals(0, version.getGridDefinitions().get(0).getGridScale());
 
         assertTrue(version.isSingleFile());
 

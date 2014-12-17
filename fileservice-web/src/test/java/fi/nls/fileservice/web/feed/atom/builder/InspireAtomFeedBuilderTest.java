@@ -58,7 +58,7 @@ public class InspireAtomFeedBuilderTest {
         v1.setSingleFile(true);
         v1.setDataset(d2);
         v1.setName("kuntajako_250k");
-        v1.getGridDefs().add(dgd);
+        v1.getGridDefinitions().add(dgd);
 
         // v1.setGridDefs(gridDefs)
 

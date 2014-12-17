@@ -154,7 +154,7 @@ public class DownloadServiceFeedBuilder extends InspireAtomFeedBuilder {
                 entry.getLinks().add(metadataLink);
             }
 
-            List<DatasetGridDefinition> dgs = datasetVersion.getGridDefs();
+            List<DatasetGridDefinition> dgs = datasetVersion.getGridDefinitions();
             for (DatasetGridDefinition dgd : dgs) {
                 Category category = getCrsCategory(dgd.getCrs());
                 if (category != null) {

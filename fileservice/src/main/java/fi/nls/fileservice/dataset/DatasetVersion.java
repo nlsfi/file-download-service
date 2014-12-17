@@ -10,6 +10,7 @@ import javax.validation.constraints.Pattern;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import fi.nls.fileservice.files.DetachedNode;
 
@@ -80,7 +81,8 @@ public class DatasetVersion extends DatasetDescription {
         this.wmsMaxScale = wmsMaxScale;
     }
 
-    public List<DatasetGridDefinition> getGridDefs() {
+    @JsonProperty("gridDefs") // compatibility with legacy map ui
+    public List<DatasetGridDefinition> getGridDefinitions() {
         return gridDefinitions;
     }
 

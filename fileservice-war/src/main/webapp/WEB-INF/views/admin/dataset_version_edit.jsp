@@ -59,37 +59,44 @@
 <form:select class="format" path="formats[0]">
 	<form:options items="${distributionFormats}"/>
 </form:select>
-<a data-field=".format" class="delete" href="#">POISTA</a>
+<a data-field=".format_template" class="delete" href="#">POISTA</a>
 </div>
 </c:if>
 
-<a style="display: block; clear: both;" id="add_format" href="#">LISÄÄ TIEDOSTOMUOTO</a>
+<a style="display: block; clear: both;" class="add" id="add_format" href="#">LISÄÄ TIEDOSTOMUOTO</a>
 
 </fieldset>
 
-<fieldset><legend>Koordinaattijärjestelmä ja karttalehtijako</legend>
-<div class="formrow"><form:label path="gridDefs[0].crs">Koordinaattijärjestelmä :</form:label>
+<fieldset id="crs_selection"><legend>Koordinaattijärjestelmät ja karttalehtijaot</legend>
+<c:forEach items="${datasetVersion.gridDefinitions}" var="gridDef" varStatus="rc" begin="0">
+<div class="crs_template formrow">
+    <form:label class="crs" path="gridDefinitions[${rc.index}].crs">Koordinaattijärjestelmä :</form:label>
 
-<form:select path="gridDefs[0].crs"><form:option name="etrs-tm35fin" value="etrs-tm35fin"/></form:select></div>
+<select class="crs" id="gridDefinitions${rc.index}.crs" name="gridDefinitions[${rc.index}].crs"
+    data-selected="${gridDef.crs}">
+</select>
 
-<div class="formrow">
-<form:label path="gridDefs[0].gridSize">Lehtijaon mittakaava :</form:label>
-<form:select path="gridDefs[0].gridSize">
-<form:option value="None" label="Ei lehtijakoa"/>
-<form:option value="3x3" label="3 km x 3 km (1:5000)"/>
-<form:option value="6x6" label="6 km x 6 km (1:10000)"/>
-<form:option value="12x12" label="12 km x 12 km (1:25000)"/>
-<form:option value="12x24" label="12 km x 24 km (1:25000)"/>
-<form:option value="24x24" label="24 km x 24 km (1:50000)"/>
-<form:option value="24x48" label="24 km x 48 km (1:50000)"/>
-<form:option value="48x48" label="48 km x 48 km (1:100000)"/>
-<form:option value="48x96" label="48 km x 96 km (1:100000)"/>
-<form:option value="96x96" label="96 km x 96 km (1:200000)"/>
-<form:option value="96x192" label="96 km x 192 km (1:200000)"/>
-</form:select></div>
-<%--
-<div class="formrow"><form:label path="gridDefs[0].gridScale">Lehtijaon mittakaava :</form:label> <form:input path="gridDefs[0].gridScale"/></div>
-<div class="formsinglerow"><form:checkbox path="singleFile" label="Koko Suomi yhdessä tiedostossa"/></div> --%>
+<form:label class="gridSize" path="gridDefinitions[${rc.index}].gridSize">Lehtijaon mittakaava :</form:label>
+<select class="gridSize" data-selected="${gridDef.gridSize}" id="gridDefinitions${rc.index}.gridSize" name="gridDefinitions[${rc.index}].gridSize">
+</select>
+<a data-field=".crs_template" class="delete" href="#">POISTA</a>
+</div>
+</c:forEach>
+<c:if test="${empty datasetVersion.gridDefinitions}">
+    <div class="crs_template formrow">
+        <form:label class="crs" path="gridDefinitions[0].crs">Koordinaattijärjestelmä :</form:label>
+
+    <form:select class="crs" path="gridDefinitions[0].crs">
+    </form:select>
+
+    <form:label class="gridSize" path="gridDefinitions[0].gridSize">Lehtijaon mittakaava :</form:label>
+    <form:select class="gridSize" path="gridDefinitions[0].gridSize">
+    </form:select>
+    <a data-field=".crs_template" class="delete" href="#">POISTA</a>
+    </div>
+</c:if>
+
+<a style="display: block; clear: both;" class="add" id="add_crs" href="#">LISÄÄ KOORDINAATTIJÄRJESTELMÄ</a>
 </fieldset>
 
 <div class="submitrow"><input type="submit" value="Tallenna"/></div>
@@ -100,6 +107,51 @@
 <script type="text/javascript">
 $(document).ready(function() {
 		
+    var gridDefinitionsJSON = '<c:out escapeXml="false" value="${crsDefinitionsJSON}"/>';
+    var gridDefinitions = JSON.parse(gridDefinitionsJSON);
+    
+    var crsElements = $('select.crs');
+    $.each(crsElements, function(i, crs) {
+        var jCrs = $(crs);
+        var currentCrs = jCrs.data('selected');
+        var options = jCrs.find('option');
+        if (options.length == 0) {
+            $.each(gridDefinitions, function(i, gd) {
+                var option = $('<option>' + gd.inspireLabel + '</option>');
+                option.attr('value', gd.crsId);
+                if (gd.crsId == currentCrs) {
+                    option.attr('selected','selected');
+                }
+                jCrs.append(option);
+                options.push(option);
+            });
+        }
+           
+        if (!currentCrs) {
+            currentCrs = options[0].attr('value');
+        }
+        
+        var grids = gridDefinitions[currentCrs].grids;
+        var gridSelect = jCrs.nextAll("select");
+        var currentGrid = gridSelect.data('selected');
+        for (var p in grids) {
+   	        if (grids.hasOwnProperty(p)) {
+                var option = $('<option>' + grids[p].label + '</option>');
+                option.attr('value', grids[p].gridSize);
+                if (grids[p].gridSize == currentGrid) {
+                    option.attr('selected','selected');
+                } 
+                gridSelect.append(option);
+            }    
+        }      
+    });
+    
+    var addCrsLink = $('#add_crs');
+    addCrsLink.data('disable-on', Object.keys(gridDefinitions).length);
+    if (crsElements.length >= addCrsLink.data('disable-on')) {
+        addCrsLink.hide();
+    }
+   
     $("#name").focus();
 	
 	$("#add_format").click(function(event) {
@@ -119,8 +171,53 @@ $(document).ready(function() {
 		var elem = $(this).data('field');
 		var numElems = $(elem).length;
 		if (numElems > 1) {
+            var addLink = $(this).parents('fieldset').find('a.add');
 			$(this).parent().remove();
-		}
+            
+            if (addLink) {
+                var disableOn = addLink.data('disable-on');
+                if (disableOn && numElems - 1 < disableOn) {
+                    addLink.show();
+                }
+            }
+        }
+	});
+    
+    $("#crs_selection").on('change', "select.crs", function() {
+        var grids = gridDefinitions[this.value].grids;
+        var gridSelect = $(this).nextAll("select");
+        gridSelect.empty();
+        for (var p in grids) {
+   	        if (grids.hasOwnProperty(p)) {
+                var option = $('<option>' + grids[p].label + '</option>');
+                option.attr('value', grids[p].gridSize); 
+                gridSelect.append(option);
+            }    
+        }      
+    });
+    
+    $("#add_crs").click(function(event) {
+		event.preventDefault();
+		var copy = $('.crs_template:first').clone();
+		var name = $(".crs").length;
+		var nextNum = new Number(name);
+
+		var select = copy.find("select.crs");
+		select.prop('name','gridDefinitions[' + nextNum + ']\.crs');
+		select.prop('id','gridDefinitions' + nextNum + '\.crs');
+		copy.find("label.crs").prop('for','gridDefinitions' + nextNum + '\.crs');
+        
+		var selectGrid = copy.find("select.gridSize");
+		selectGrid.prop('name','gridDefinitions[' + nextNum + ']\.gridSize');
+		selectGrid.prop('id','gridDefinitions' + nextNum + '\.gridSize');
+		copy.find("label.gridSize").prop('for','gridDefinitions' + nextNum + '\.gridSize');
+        
+        $(this).before(copy);
+        
+        if (nextNum >= $(this).data('disable-on')) {
+            $(this).hide();
+        }
+	
 	});
 		
 });

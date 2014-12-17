@@ -24,6 +24,8 @@ import fi.nls.fileservice.dataset.Dataset;
 import fi.nls.fileservice.dataset.DatasetService;
 import fi.nls.fileservice.dataset.DatasetVersion;
 import fi.nls.fileservice.dataset.Licence;
+import fi.nls.fileservice.dataset.crs.CrsDefinition;
+import fi.nls.fileservice.util.JSONUtils;
 import fi.nls.fileservice.web.controller.BaseController;
 
 @Controller
@@ -33,10 +35,13 @@ public class DatasetAdminController extends BaseController {
     @Inject
     private DatasetService datasetService;
 
-    @Resource(name = "distributionFormats")
+    @Resource(name="distributionFormats")
     private Map<String, String> distributionFormats;
+    
+    @Resource(name="crsDefinitions")
+    private Map<String, CrsDefinition> crsDefinitions;
 
-    @RequestMapping(value = "/tuotteet", method = RequestMethod.GET)
+    @RequestMapping(value="/tuotteet", method=RequestMethod.GET)
     public String datasetList(HttpServletRequest request, Model model) {
         List<Dataset> datasets = datasetService.getAllDatasets();
 
@@ -56,29 +61,27 @@ public class DatasetAdminController extends BaseController {
 
         });
 
-        model.addAttribute("datasets", datasets); // auto gen would give
-                                                  // JCRNodeDatasetList
+        model.addAttribute("datasets", datasets); // auto gen would give JCRNodeDatasetList
         return "admin/datasets";
     }
 
-    @RequestMapping(value = "/tuotteet/lisaa", method = RequestMethod.GET)
+    @RequestMapping(value="/tuotteet/lisaa", method=RequestMethod.GET)
     public String newDataset(Model model) {
         model.addAttribute("dataset", new Dataset());
         return "admin/dataset_edit";
     }
 
-    @RequestMapping(value = "/tuotteet/{tuote}", method = RequestMethod.GET)
-    public String editDataset(@PathVariable(value = "tuote") String tuote,
+    @RequestMapping(value="/tuotteet/{tuote}", method=RequestMethod.GET)
+    public String editDataset(@PathVariable(value="tuote") String datasetID,
             Model model) {
-        Dataset dataset = datasetService.getDatasetById(tuote);
+        Dataset dataset = datasetService.getDatasetById(datasetID);
         model.addAttribute("dataset", dataset);
         model.addAttribute("licenses", Licence.values());
         return "admin/dataset_edit";
     }
 
-    @RequestMapping(value = "/tuotteet/", method = RequestMethod.POST)
-    public String saveDataset(
-            @ModelAttribute("dataset") @Valid Dataset dataset,
+    @RequestMapping(value="/tuotteet/", method=RequestMethod.POST)
+    public String saveDataset(@ModelAttribute("dataset") @Valid Dataset dataset,
             BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "admin/dataset_edit";
@@ -88,59 +91,61 @@ public class DatasetAdminController extends BaseController {
         return "redirect:/hallinta/tuotteet/" + dataset.getName();
     }
 
-    @RequestMapping(value = "/tuotteet/delete/{tuote}", method = RequestMethod.POST)
+    @RequestMapping(value="/tuotteet/delete/{tuote}", method=RequestMethod.POST)
     public @ResponseBody
     String deleteDataset(@RequestParam(value = "_method") String method,
-            @PathVariable("tuote") String tuote) {
-        datasetService.deleteDataset(tuote);
+            @PathVariable("tuote") String datasetID) {
+        datasetService.deleteDataset(datasetID);
         return "OK";
     }
 
-    @RequestMapping(value = "/tuotteet/{tuote}/lisaa", method = RequestMethod.GET)
+    @RequestMapping(value="/tuotteet/{tuote}/lisaa", method=RequestMethod.GET)
     public String newDatasetVersion(
-            @PathVariable(value = "tuote") String tuote, Model model) {
-        Dataset dataset = datasetService.getDatasetById(tuote);
+            @PathVariable(value = "tuote") String datasetID, Model model) {
+        Dataset dataset = datasetService.getDatasetById(datasetID);
         model.addAttribute("dataset", dataset);
-        model.addAttribute("datasetName", tuote);
+        model.addAttribute("datasetName", datasetID);
         model.addAttribute("datasetVersion", new DatasetVersion());
         model.addAttribute("distributionFormats", distributionFormats);
+        model.addAttribute("crsDefinitionsJSON", JSONUtils.object2JSON(crsDefinitions));
         return "admin/dataset_version_edit";
     }
 
-    @RequestMapping(value = "/tuotteet/{tuote}/{tuoteversio}", method = RequestMethod.GET)
+    @RequestMapping(value="/tuotteet/{tuote}/{tuoteversio}", method=RequestMethod.GET)
     public String editDatasetVersion(
-            @PathVariable(value = "tuote") String tuote,
-            @PathVariable(value = "tuoteversio") String tuoteversio, Model model) {
-        DatasetVersion datasetVersion = datasetService.getDatasetVersion(tuote,
-                tuoteversio);
+            @PathVariable(value = "tuote") String dataset,
+            @PathVariable(value = "tuoteversio") String datasetVersionID, Model model) {
+        DatasetVersion datasetVersion = datasetService.getDatasetVersion(dataset, datasetVersionID);
+        model.addAttribute("datasetName", dataset);
         model.addAttribute("dataset", datasetVersion.getDataset());
-        model.addAttribute("datasetName", tuote);
-        model.addAttribute("distributionFormats", distributionFormats);
         model.addAttribute("datasetVersion", datasetVersion);
+        model.addAttribute("distributionFormats", distributionFormats);
+        model.addAttribute("crsDefinitionsJSON", JSONUtils.object2JSON(crsDefinitions));
         return "admin/dataset_version_edit";
     }
 
-    @RequestMapping(value = "/tuotteet/{tuote}/versio", method = RequestMethod.POST)
+    @RequestMapping(value="/tuotteet/{tuote}/versio", method=RequestMethod.POST)
     public String saveDatasetVersion(
-            @PathVariable(value = "tuote") String tuote,
-            @Valid DatasetVersion version, BindingResult result, Model model) {
+            @PathVariable(value = "tuote") String datasetID,
+            @Valid DatasetVersion datasetVersion, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            Dataset dataset = datasetService.getDatasetById(tuote);
+            Dataset dataset = datasetService.getDatasetById(datasetID);
             model.addAttribute("dataset", dataset);
-            model.addAttribute("datasetName", tuote);
+            model.addAttribute("datasetName", datasetID);
             model.addAttribute("distributionFormats", distributionFormats);
+            model.addAttribute("crsDefinitionsJSON", JSONUtils.object2JSON(crsDefinitions));
             return "admin/dataset_version_edit";
         }
-        datasetService.saveDatasetVersion(tuote, version);
+        datasetService.saveDatasetVersion(datasetID, datasetVersion);
         return "redirect:/hallinta/tuotteet/{tuote}";
     }
 
-    @RequestMapping(value = "/tuotteet/delete/{tuote}/{tuoteversio}", method = RequestMethod.POST)
+    @RequestMapping(value="/tuotteet/delete/{tuote}/{tuoteversio}", method=RequestMethod.POST)
     public @ResponseBody
     String deleteDatasetVersion(@RequestParam(value = "_method") String method,
-            @PathVariable("tuote") String tuote,
-            @PathVariable("tuoteversio") String tuoteversio) {
-        datasetService.deleteDatasetVersion(tuote, tuoteversio);
+            @PathVariable("tuote") String datasetID,
+            @PathVariable("tuoteversio") String datasetVersionID) {
+        datasetService.deleteDatasetVersion(datasetID, datasetVersionID);
         return "OK";
     }
 
