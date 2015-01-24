@@ -8,4 +8,5 @@ target/
 .classpath
 .idea
 .project
+*transaction.log
 *pom.xml.versionsBackup
