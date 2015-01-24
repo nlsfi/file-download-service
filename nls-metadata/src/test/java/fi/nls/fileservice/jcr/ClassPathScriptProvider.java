@@ -12,20 +12,17 @@ public class ClassPathScriptProvider implements ScriptProvider {
             "korkeusmalli_2m.js", "kuntajako.js", "laser.js",
             "maastokartta_100k.js", "maastokartta_250k.js",
             "maastokarttarasteri_100k.js", "maastokarttarasteri_250k.js",
-            "maastokarttarasteri.js", "maastotietokanta.js",
-            "maastotietokanta_tiesto_osoitteilla.js", "nimisto.js", "orto.js",
+            "maastokarttarasteri.js", "maastotietokanta.js", "nimisto.js", "orto.js",
             "peruskarttarasteri.js", "taustakarttasarja.js",
             "yleiskartta_1000k.js", "yleiskartta_4500k.js",
             "yleiskarttarasteri_1000k.js", "yleiskarttarasteri_4500k.js",
-            // "kiinteistorekisterikartta.js",
+            "kiinteistorekisterikartta.js",
             "vinovalovarjoste.js", "korkeusvyohyke.js", "karttalehtijako.js"
-
     };
 
     @Override
     public InputStream getScriptAsStream(String name) {
-        return ClassPathScriptProvider.class.getClassLoader()
-                .getResourceAsStream(name);
+        return ClassPathScriptProvider.class.getClassLoader().getResourceAsStream(name);
     }
 
     @Override

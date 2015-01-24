@@ -28,7 +28,6 @@ public class JavascriptMetadataServiceExecutor implements
             .getLogger(JavascriptMetadataServiceExecutor.class);
 
     public static final String CORE_SCRIPT_NAME = "core.js";
-    public static final String ENGINE_NAME = "JavaScript";
     private ScriptEngine scriptEngine;
     private Map<String, CompiledScript> scriptCache;
     private ScriptProvider scriptProvider;
@@ -44,10 +43,13 @@ public class JavascriptMetadataServiceExecutor implements
     @Override
     public void init() {
         ScriptEngineManager sem = new ScriptEngineManager();
-        ScriptEngine engine = sem.getEngineByName(ENGINE_NAME);
+        ScriptEngine engine = sem.getEngineByName("nashorn");
         if (engine == null) {
-            throw new IllegalStateException("ScriptEngine not found by name '"
-                    + ENGINE_NAME + "'");
+        	// Java 8 / Nashorn not available, try Java 6/7 Rhino next
+        	engine = sem.getEngineByName("JavaScript");
+        }
+        if (engine == null) { // no JS engine found, give up
+            throw new IllegalStateException("ScriptEngine not found!");
         }
         this.scriptEngine = engine;
         CompiledScript coreScript = loadScript(CORE_SCRIPT_NAME,
@@ -109,7 +111,5 @@ public class JavascriptMetadataServiceExecutor implements
         } catch (NoSuchMethodException e) {
             throw new ScriptExecutionException(e);
         }
-
     }
-
 }

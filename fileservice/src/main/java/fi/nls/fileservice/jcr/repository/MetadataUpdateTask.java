@@ -50,26 +50,14 @@ public class MetadataUpdateTask implements Callable<Object> {
                 .getProperty(Property.JCR_LAST_MODIFIED).getDate();
 
         if (node.hasProperty(MetadataProperty.NLS_PREVMODIFIED)) {
-            Calendar prevModified = node.getProperty(
-                    MetadataProperty.NLS_PREVMODIFIED).getDate();
+            Calendar prevModified = node.getProperty(MetadataProperty.NLS_PREVMODIFIED).getDate();
             if (lastModified.compareTo(prevModified) != 0) {
-                node.setProperty(MetadataProperty.NLS_PREVMODIFIED,
-                        lastModified);
-                node.setProperty(MetadataProperty.NLS_FILECHANGED,
-                        new GregorianCalendar());
+                node.setProperty(MetadataProperty.NLS_PREVMODIFIED, lastModified);
+                node.setProperty(MetadataProperty.NLS_FILECHANGED, new GregorianCalendar());
             }
         } else {
-            // backwards compatibility
-            // don't push file up in MTP
-            // node.setProperty(MetadataProperty.NLS_PREVMODIFIED,
-            // lastModified);
-            // node.setProperty(MetadataProperty.NLS_FILECHANGED, lastModified);
-
-            // TODO is this right??
             node.setProperty(MetadataProperty.NLS_PREVMODIFIED, lastModified);
-            node.setProperty(MetadataProperty.NLS_FILECHANGED,
-                    new GregorianCalendar());
-
+            node.setProperty(MetadataProperty.NLS_FILECHANGED, new GregorianCalendar());
         }
 
         Set<Entry<String, Object>> entrySet = properties.entrySet();
@@ -111,14 +99,11 @@ public class MetadataUpdateTask implements Callable<Object> {
         Session session = null;
         try {
             session = repository.login(credentialsProvider.getCredentials());
-
             for (int i = 0; i < paths.length; i++) {
                 try {
-
                     logger.debug("Metadata update for: " + paths[i]);
                     Node node = session.getNode(paths[i]);
                     if (processNode(node)) {
-
                         // save session in batches of ten files
                         if (i % 10 == 0) {
                             session.save();
@@ -136,8 +121,7 @@ public class MetadataUpdateTask implements Callable<Object> {
 
             session.save();
 
-            DatasetLastModificationTimeUpdater dcu = new DatasetLastModificationTimeUpdater(
-                    datasetDAO);
+            DatasetLastModificationTimeUpdater dcu = new DatasetLastModificationTimeUpdater(datasetDAO);
             dcu.updateDatasetUpdateDates(session);
             session.save();
 
