@@ -13,7 +13,7 @@
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<maven.compiler.showWarnings>true</maven.compiler.showWarnings>
 		<maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
-		<spring.framework.version>3.2.12.RELEASE</spring.framework.version>
+		<spring.framework.version>3.2.13.RELEASE</spring.framework.version>
 		<modeshape.version>3.8.1.Final</modeshape.version>
                 <jbossjta.version>4.16.6.Final</jbossjta.version>
 		<jackson.version>2.4.2</jackson.version>
