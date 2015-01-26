@@ -30,8 +30,7 @@ public class MtpServiceFeedBuilder extends DownloadServiceFeedBuilder {
     @Override
     public void applyFeedMetadata(Feed feed) {
         feed.setTitle(requestContext.getMessage("mtp_service_feed_title", null));
-        feed.setSubtitle(requestContext.getMessage("mtp_service_feed_subtitle",
-                null));
+        feed.setSubtitle(requestContext.getMessage("mtp_service_feed_subtitle", null));
         feed.setRights(requestContext.getMessage("mtp_opendata_rights", null));
 
         Link serviceMetadataLink = new Link();
@@ -39,8 +38,7 @@ public class MtpServiceFeedBuilder extends DownloadServiceFeedBuilder {
                 .fromUriString(feedMetadata.getMetadataUri());
         serviceMetadataLink.setHref(metadataUriComponentsBuilder
                 .buildAndExpand(
-                        feedMetadata.getServiceDescriptionFileIdentifier())
-                .toUriString());
+                        feedMetadata.getServiceDescriptionFileIdentifier()).toUriString());
         serviceMetadataLink.setRel(FeedConstants.LINK_REL_DESCRIBEDBY);
         serviceMetadataLink.setType(feedMetadata.getMetadataMimeType());
         feed.getLinks().add(serviceMetadataLink);
@@ -67,23 +65,20 @@ public class MtpServiceFeedBuilder extends DownloadServiceFeedBuilder {
                     new Comparator<DatasetVersion>() {
 
                         @Override
-                        public int compare(DatasetVersion dv1,
-                                DatasetVersion dv2) {
+                        public int compare(DatasetVersion dv1, DatasetVersion dv2) {
                             if (dv2.getLastModified() != null) {
                                 if (dv1.getLastModified() != null) {
-                                    return dv2.getLastModified().compareTo(
-                                            dv1.getLastModified());
+                                    return dv2.getLastModified().compareTo(dv1.getLastModified());
                                 }
                                 return 1;
                             } else if (dv1.getLastModified() != null) {
-                                return 1;
+                                return -1;
                             }
                             return 0;
                         }
                     });
 
-            Calendar lastUpdatedDataset = sortedDatasetVersions.get(0)
-                    .getLastModified();
+            Calendar lastUpdatedDataset = sortedDatasetVersions.get(0).getLastModified();
             if (lastUpdatedDataset != null) {
                 feed.setUpdated(lastUpdatedDataset.getTime());
             }
