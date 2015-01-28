@@ -17,10 +17,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
 
 import fi.nls.fileservice.dataset.DatasetDAO;
@@ -45,9 +47,9 @@ import fi.nls.fileservice.security.jcr.ExternalAuthenticationCredentials;
 import fi.nls.fileservice.security.jcr.SystemCredentialsProvider;
 import fi.nls.fileservice.security.pgsql.PGAccessPolicyManager;
 import fi.nls.fileservice.security.service.DummyUserAttributesService;
+import fi.nls.fileservice.security.service.UserAttributesProvider;
 import fi.nls.fileservice.security.service.UserService;
 import fi.nls.fileservice.security.service.UserServiceImpl;
-import fi.nls.fileservice.security.service.UserAttributesProvider;
 import fi.nls.fileservice.security.service.ldap.LDAPUserAttributesProvider;
 import fi.nls.fileservice.statistics.StatisticsService;
 import fi.nls.fileservice.statistics.StatisticsServiceImpl;
@@ -58,7 +60,7 @@ import fi.nls.fileservice.web.feed.atom.builder.FeedMetadata;
 import freemarker.template.TemplateException;
 
 @Configuration
-// @EnableScheduling //DISABLED for the moment
+@EnableScheduling
 @ComponentScan(basePackages = "fi.nls.fileservice")
 @PropertySource(value = { "classpath:/config.properties", "classpath:/tp-config-ext.properties" })
 @Import(DataSourceConfig.class)
@@ -74,6 +76,11 @@ public class ApplicationConfig {
     @Resource(name = "crsDefinitions")
     private Map<String, CrsDefinition> crsDefinitions;
 
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer placeHolderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
+    
     @Bean
     public CredentialsProvider systemCredentialsProvider() {
         Credentials credentialsProvider = new ExternalAuthenticationCredentials(

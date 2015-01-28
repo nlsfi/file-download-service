@@ -8,7 +8,7 @@ import fi.nls.fileservice.util.Formatter;
 
 public class DatasetStatistics {
 
-    private String day;
+  //  private String day;
     private String datasetId;
     private String datasetVersionId;
 
@@ -18,7 +18,7 @@ public class DatasetStatistics {
     private long totalBytesTransferred;
     private long totalDownloads;
 
-    public Date getDay() {
+   /* public Date getDay() {
         if (day != null) {
             try {
                 return new SimpleDateFormat("yyyy-MM-dd").parse(day);
@@ -36,7 +36,7 @@ public class DatasetStatistics {
 
     public void setDayStr(String day) {
         this.day = day;
-    }
+    }*/
 
     public String getDatasetId() {
         return datasetId;

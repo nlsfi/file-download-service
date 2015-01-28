@@ -28,7 +28,8 @@ public class ExcelDailyStatisticView extends AbstractXLSXView {
 
         String[] alpha26 = new String[] { "A", "B", "C", "D", "E", "F", "G",
                 "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
-                "T", "U", "V", "W", "X", "Y", "Z", "AA", "BB", "CC", "DD" };
+                "T", "U", "V", "W", "X", "Y", "Z", "AA", "BB", "CC", "DD", "EE", "FF", "GG", "HH", "II", "JJ", "KK", "LL", "MM", "NN",
+                "OO","PP","QQ","RR","SS","TT", "UU","VV","WW","XX","YY","ZZ"};
 
         PivotStatistics pivotStats = (PivotStatistics) model.get("statistics");
 
@@ -71,32 +72,25 @@ public class ExcelDailyStatisticView extends AbstractXLSXView {
             Date day = pivotStats.getDays().get(i);
             rowFiles.createCell(0, Cell.CELL_TYPE_STRING).setCellValue(day);
             CellStyle cellStyle = workbook.createCellStyle();
-            cellStyle.setDataFormat(workbook.getCreationHelper()
-                    .createDataFormat().getFormat("m/d/yy"));
+            cellStyle.setDataFormat(workbook.getCreationHelper().createDataFormat().getFormat("m/d/yy"));
             rowFiles.getCell(0).setCellStyle(cellStyle);
 
             rowLength.createCell(0, Cell.CELL_TYPE_STRING).setCellValue(day);
             rowLength.getCell(0).setCellStyle(cellStyle);
 
-            List<DatasetStatistics> dailyStats = pivotStats.getDailyStats()
-                    .get(i);
+            List<DatasetStatistics> dailyStats = pivotStats.getDailyStats().get(i);
 
             for (int j = 0; j < dailyStats.size(); j++) {
                 DatasetStatistics stat = dailyStats.get(j);
                 if (stat != null) {
-                    rowFiles.createCell(j + 1, Cell.CELL_TYPE_NUMERIC)
-                            .setCellValue(stat.getTotalDownloads());
-                    rowLength.createCell(j + 1, Cell.CELL_TYPE_NUMERIC)
-                            .setCellValue(stat.getTotalBytesTransferred());
+                    rowFiles.createCell(j + 1, Cell.CELL_TYPE_NUMERIC).setCellValue(stat.getTotalDownloads());
+                    rowLength.createCell(j + 1, Cell.CELL_TYPE_NUMERIC).setCellValue(stat.getTotalBytesTransferred());
                 }
             }
 
-            String formula = "SUM(B" + rowNum + ":"
-                    + alpha26[dailyStats.size()] + rowNum + ")";
-            rowFiles.createCell(headers.length, Cell.CELL_TYPE_FORMULA)
-                    .setCellFormula(formula);
-            rowLength.createCell(headers.length, Cell.CELL_TYPE_FORMULA)
-                    .setCellFormula(formula);
+            String formula = "SUM(B" + rowNum + ":" + alpha26[headers.length - 1] + rowNum + ")";
+            rowFiles.createCell(headers.length, Cell.CELL_TYPE_FORMULA).setCellFormula(formula);
+            rowLength.createCell(headers.length, Cell.CELL_TYPE_FORMULA).setCellFormula(formula);
 
         }
 
@@ -109,8 +103,7 @@ public class ExcelDailyStatisticView extends AbstractXLSXView {
         // sheetLength.setColumnWidth(0, 100);
 
         totalRow.createCell(0, Cell.CELL_TYPE_STRING).setCellValue("Yhteensä");
-        totalLengthRow.createCell(0, Cell.CELL_TYPE_STRING).setCellValue(
-                "Yhteensä");
+        totalLengthRow.createCell(0, Cell.CELL_TYPE_STRING).setCellValue("Yhteensä");
 
         for (int i = 1; i <= headers.length; i++) {
             totalRow.createCell(i, Cell.CELL_TYPE_FORMULA).setCellFormula(
@@ -127,8 +120,7 @@ public class ExcelDailyStatisticView extends AbstractXLSXView {
 
         // daily orders, sheet 3
         @SuppressWarnings("unchecked")
-        List<DailyOrders> dailyOrders = (List<DailyOrders>) model
-                .get("dailyOrders");
+        List<DailyOrders> dailyOrders = (List<DailyOrders>) model.get("dailyOrders");
         XSSFSheet ordersSheet = workbook.createSheet("Tilaukset");
         XSSFRow ordersHeader = ordersSheet.createRow(0);
         ordersHeader.createCell(0).setCellValue("Päivä");
@@ -141,18 +133,14 @@ public class ExcelDailyStatisticView extends AbstractXLSXView {
             Date day = order.getDay();
             row.createCell(0, Cell.CELL_TYPE_STRING).setCellValue(day);
             CellStyle cellStyle = workbook.createCellStyle();
-            cellStyle.setDataFormat(workbook.getCreationHelper()
-                    .createDataFormat().getFormat("m/d/yy"));
+            cellStyle.setDataFormat(workbook.getCreationHelper().createDataFormat().getFormat("m/d/yy"));
             row.getCell(0).setCellStyle(cellStyle);
-            row.createCell(1, Cell.CELL_TYPE_NUMERIC).setCellValue(
-                    order.getCount());
+            row.createCell(1, Cell.CELL_TYPE_NUMERIC).setCellValue(order.getCount());
         }
 
         XSSFRow totalOrdersRow = ordersSheet.createRow(rowNumber);
-        totalOrdersRow.createCell(0, Cell.CELL_TYPE_STRING).setCellValue(
-                "Yhteensä");
-        totalOrdersRow.createCell(1, Cell.CELL_TYPE_FORMULA).setCellFormula(
-                "SUM(B2:B" + Integer.toString(rowNumber) + ")");
+        totalOrdersRow.createCell(0, Cell.CELL_TYPE_STRING).setCellValue("Yhteensä");
+        totalOrdersRow.createCell(1, Cell.CELL_TYPE_FORMULA).setCellFormula("SUM(B2:B" + Integer.toString(rowNumber) + ")");
 
     }
 

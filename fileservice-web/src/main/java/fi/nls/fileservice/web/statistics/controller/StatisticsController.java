@@ -14,11 +14,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 
+import fi.nls.fileservice.statistics.DailyOrders;
 import fi.nls.fileservice.statistics.DatasetStatistics;
+import fi.nls.fileservice.statistics.PivotStatistics;
 import fi.nls.fileservice.statistics.ServiceOrders;
 import fi.nls.fileservice.statistics.StatisticsService;
+import fi.nls.fileservice.statistics.web.ExcelDailyStatisticView;
 import fi.nls.fileservice.statistics.web.ExcelStatisticView;
 import fi.nls.fileservice.web.controller.BaseController;
 
@@ -42,8 +47,7 @@ public class StatisticsController extends BaseController {
 
             @Override
             public String getAsText() {
-                return new SimpleDateFormat("dd.MM.yyyy")
-                        .format((Date) getValue());
+                return new SimpleDateFormat("dd.MM.yyyy").format((Date) getValue());
             }
 
         });
@@ -57,35 +61,30 @@ public class StatisticsController extends BaseController {
         model.addAttribute("orders", serviceOrders.getOrderCount());
         return "statistics";
     }
-
-    /*
-     * @RequestMapping("/tilastot/raportti.xlsx") public ModelAndView
-     * statisticsReport(@RequestParam(value="from",required=false) Date from,
-     * 
-     * @RequestParam(value="to",required=false) Date to, Locale locale,
-     * ModelAndView model) {
-     * 
-     * PivotStatistics stats = statisticsService.getDailyStatistics(from, to,
-     * locale); model.addObject("statistics", stats);
-     * 
-     * List<DailyOrders> dailyOrders = statisticsService.getDailyOrders();
-     * model.addObject("dailyOrders", dailyOrders); model.addObject("filename",
-     * getFilenameWithDate("tilasto", new Date(), "xlsx")); model.setView(new
-     * ExcelDailyStatisticView());
-     * 
-     * return model; }
-     */
+    
+    @RequestMapping("/tilastot/raportti.xlsx")
+    public ModelAndView statisticsReport(@RequestParam(value="from",required=false) Date from,
+      @RequestParam(value="to",required=false) Date to, Locale locale, ModelAndView model) {
+      
+      PivotStatistics stats = statisticsService.getDailyStatistics(from, to, locale);
+      model.addObject("statistics", stats);
+      
+      List<DailyOrders> dailyOrders = statisticsService.getDailyOrders();
+      model.addObject("dailyOrders", dailyOrders);
+      model.addObject("filename", getFilenameWithDate("tilasto", new Date(), "xlsx"));
+      model.setView(new ExcelDailyStatisticView());
+      
+      return model;
+    }
 
     @RequestMapping("/tilastot/kaikki.xlsx")
     public View statisticsExcel(Locale locale, Model model) {
-        List<DatasetStatistics> stats = statisticsService.getTotalStats(locale,
-                false);
+        List<DatasetStatistics> stats = statisticsService.getTotalStats(locale, false);
         model.addAttribute("statistics", stats);
 
         ServiceOrders serviceOrders = statisticsService.getOrderCount();
         model.addAttribute("orders", serviceOrders.getOrderCount());
-        model.addAttribute("filename",
-                getFilenameWithDate("tilasto", new Date(), "xlsx"));
+        model.addAttribute("filename", getFilenameWithDate("tilasto", new Date(), "xlsx"));
         return new ExcelStatisticView();
     }
 

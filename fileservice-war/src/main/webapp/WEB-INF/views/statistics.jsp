@@ -25,12 +25,11 @@
 <div class="container">
 
 <h2>Lataustilastot</h2>
-<%--
+
 <p>Tuota päivittäin jaoteltu lataustilastoraportti Excel-taulukkona</p>
 
-<form action="<c:url value="/tilastot/raportti.xlsx"/>">
+<form action="<c:url value="/tilastot/raportti.xlsx"/>"><button class="action_btn action">Tuota raportti</button>
 </form>
---%>
 
 <h3>Tilaukset yhteensä</h3>
 
