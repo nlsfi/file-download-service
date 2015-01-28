@@ -2,14 +2,14 @@
 <nls='http://www.nls.fi/jcr/2012'>
 <gmd='http://www.isotc211.org/2005/gmd'>
 
+[nls:share] mixin
+ - nls:expires (DATE)
+
 [nls:dataset] > nt:unstructured
  - nls:published (BOOLEAN)
  - nls:license (STRING)
  - gmd:fileIdentifier (STRING)
  - gmd:distributionFormat (STRING) multiple
-
-[nls:retention] mixin
- - nls:expires (LONG)
 
 [nls:datasetfile] mixin
  - nls:gridCell (STRING)
@@ -46,14 +46,9 @@
  - nls:project (STRING)
  - nls:scanner (STRING)
  - nls:multipulse (STRING)
- - nls:dateOfScan (DATE)
  - nls:dateOfScanning (DATE)
  - nls:pointDensity (STRING)
  - nls:pointCloudID (STRING)
  - nls:flightAltitude (STRING)
  - nls:elevationPrecision (STRING)
- - nls:elevationAccuracy (STRING)
- - nls:timeWindow (STRING)
  - nls:timeframe (STRING)
-
- 
