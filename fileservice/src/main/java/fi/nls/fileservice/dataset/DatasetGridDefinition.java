@@ -30,7 +30,6 @@ public class DatasetGridDefinition {
         this.crs = crs;
     }
 
-    @JsonIgnore
     public String getLabel() {
         if (this.label == null) {
             return this.gridSize;
