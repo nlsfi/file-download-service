@@ -55,7 +55,7 @@
 </tbody>
 </table>
 
-<p><img alt="XSLX" src="<c:url value="/resources/img/file_csv.png"/>"> <a href="<c:url value="/tilastot/kaikki.xlsx"/>">Lataa Excel-taulukkona</a></p>
+<p><a href="<c:url value="/tilastot/kaikki.xlsx"/>">Lataa Excel-taulukkona</a></p>
 
 </div>
 
