@@ -62,7 +62,8 @@ import freemarker.template.TemplateException;
 @Configuration
 @EnableScheduling
 @ComponentScan(basePackages = "fi.nls.fileservice")
-@PropertySource(value = { "classpath:/config.properties", "classpath:/tp-config-ext.properties" })
+@PropertySource(value = { "classpath:/config.properties", "classpath:/tp-config-ext.properties" },
+           ignoreResourceNotFound = true)
 @Import(DataSourceConfig.class)
 @ImportResource({ "classpath:mappings.xml" })
 public class ApplicationConfig {
@@ -72,7 +73,7 @@ public class ApplicationConfig {
 
     @Autowired
     private DataSourceConfig dataSourceConfig;
-    
+
     @Resource(name = "crsDefinitions")
     private Map<String, CrsDefinition> crsDefinitions;
 
@@ -80,7 +81,7 @@ public class ApplicationConfig {
     public static PropertySourcesPlaceholderConfigurer placeHolderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();
     }
-    
+
     @Bean
     public CredentialsProvider systemCredentialsProvider() {
         Credentials credentialsProvider = new ExternalAuthenticationCredentials(
@@ -97,7 +98,8 @@ public class ApplicationConfig {
 
     @Bean
     public DatasetDAO datasetDAO() {
-        return new JCRDatasetDAO(env.getProperty("datasets.jcr.path"), crsDefinitions);
+        return new JCRDatasetDAO(env.getProperty("datasets.jcr.path"),
+                crsDefinitions);
     }
 
     @Bean
@@ -169,7 +171,7 @@ public class ApplicationConfig {
         try {
             freemarker.template.Configuration config = factory
                     .createConfiguration();
-            config.setEncoding(new java.util.Locale("fi", "FI"), "UTF-8"); // FIXME remove hardcode
+            config.setEncoding(new java.util.Locale("fi", "FI"), "UTF-8"); // FIXME remove hardcoded locale
             return config;
         } catch (TemplateException e) {
             throw new RuntimeException(e);
@@ -182,7 +184,8 @@ public class ApplicationConfig {
     public OrderService orderService() {
         PGOrderDAO dao = new PGOrderDAO();
         dao.setDataSource(dataSourceConfig.orderDataSource());
-        dao.setOrderValidDays(env.getProperty("token.valid.days", Integer.class));
+        dao.setOrderValidDays(env
+                .getProperty("token.valid.days", Integer.class));
         return new OrderServiceImpl(dao, mailService(), fileService(),
                 datasetDAO(), propertyFilter(), dataSourceConfig.repository(),
                 new SecureRandomTokenGenerator(),
@@ -200,13 +203,8 @@ public class ApplicationConfig {
     @Bean
     public StatisticsService statisticsService() {
         JdbcTemplate template = new JdbcTemplate(dataSourceConfig.orderDataSource());
-
-        PGStatisticsDAO statisticsDAO = new PGStatisticsDAO(
-                dataSourceConfig.orderDataSource(), template);
-
-        StatisticsService service = new StatisticsServiceImpl(statisticsDAO,
-                datasetService());
-        
+        PGStatisticsDAO statisticsDAO = new PGStatisticsDAO(dataSourceConfig.orderDataSource(), template);
+        StatisticsService service = new StatisticsServiceImpl(statisticsDAO, datasetService());
         return service;
     }
 
@@ -218,9 +216,11 @@ public class ApplicationConfig {
 
             LDAPUserAttributesProvider luas = new LDAPUserAttributesProvider();
             luas.setProviderUrl(env.getProperty("java.naming.provider.url"));
-            luas.setSecurityProtocol(env.getProperty("java.naming.security.protocol"));
+            luas.setSecurityProtocol(env
+                    .getProperty("java.naming.security.protocol"));
             luas.setPrincipal(env.getProperty("java.naming.security.principal"));
-            luas.setCredentials(env.getProperty("java.naming.security.credentials"));
+            luas.setCredentials(env
+                    .getProperty("java.naming.security.credentials"));
             luas.setSearchFilter(env.getProperty("ldap.search.filter"));
             luas.setSearchBase(env.getProperty("ldap.search.base"));
 
@@ -261,8 +261,7 @@ public class ApplicationConfig {
         javaMailProperties.put("mail.transport.protocol", "smtp");
         mailSender.setJavaMailProperties(javaMailProperties);
 
-        return new SpringMailServiceImpl(mailSender,
-                env.getProperty("mail.from"));
+        return new SpringMailServiceImpl(mailSender, env.getProperty("mail.from"));
     }
 
     @Bean(name = "distributionFormats")
