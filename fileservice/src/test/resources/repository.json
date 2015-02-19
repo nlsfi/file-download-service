@@ -4,7 +4,7 @@
     "indexProviders": {
         "local": {
             "classname": "org.modeshape.jcr.index.local.LocalIndexProvider",
-            "directory": "/data/index"
+            "directory": "target/test-classes/index"
         }
     },
     "indexes": {

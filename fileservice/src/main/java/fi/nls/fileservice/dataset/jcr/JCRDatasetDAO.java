@@ -73,8 +73,6 @@ public class JCRDatasetDAO implements DatasetDAO {
             queryStr.append("] ='true'");
         }
 
-        logger.debug("Executing query: |{}| " + queryStr);
-
         Query query = qm.createQuery(queryStr.toString(), Query.JCR_SQL2);
         QueryResult result = query.execute();
 
