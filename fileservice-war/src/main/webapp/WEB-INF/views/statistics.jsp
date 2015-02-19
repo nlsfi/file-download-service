@@ -18,7 +18,7 @@
 
 <div id="headerbar" class="headerbar">
 <a href="<spring:message code="service_frontpage_url"/>">
-<img alt="<spring:message code="organization"/>" src="<c:url value="/resources/img/"/><spring:message code="logo.image.file"/>"/></a>
+<img alt="<spring:message code="organisation"/>" src="<c:url value="/resources/img/"/><spring:message code="logo.image.file"/>"/></a>
 <h1><spring:message code="tiedostopalvelu_title"/></h1>
 </div>
 
