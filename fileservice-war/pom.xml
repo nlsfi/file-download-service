@@ -79,7 +79,7 @@
                             <target>
                                 <delete dir="target/data" />
                                 <mkdir dir="target/data/external" />
-                                <mkdir dir="target/data/bdb" />
+                                <mkdir dir="target/data/cachestore" />
                                 <mkdir dir="target/data/index" />
                             </target>
                         </configuration>

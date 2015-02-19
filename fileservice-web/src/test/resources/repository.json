@@ -1,6 +1,63 @@
 {
     "name" : "file_service",
     "jndiName" : "",
+    "indexProviders": {
+        "local": {
+            "classname": "org.modeshape.jcr.index.local.LocalIndexProvider",
+            "directory": "/data/index"
+        }
+    },
+    "indexes": {
+        "datasetsByName": {
+            "kind": "value",
+            "provider": "local",
+            "synchronous": true,
+            "nodeType": "nls:dataset",
+            "columns": "jcr:name(NAME)"
+        },
+        "filesByDataset": {
+            "kind": "value",
+            "provider": "local",
+            "synchronous": true,
+            "nodeType": "nls:datasetfile",
+            "columns": "nls:dataset(STRING)"
+        },
+        "filesByDatasetVersion": {
+            "kind": "value",
+            "provider": "local",
+            "synchronous": true,
+            "nodeType": "nls:datasetfile",
+            "columns": "nls:datasetVersion(STRING)"
+        },
+        "filesByGridCell": {
+            "kind": "value",
+            "provider": "local",
+            "synchronous": true,
+            "nodeType": "nls:datasetfile",
+            "columns": "nls:gridCell(STRING)"
+        },
+        "filesByFormat": {
+            "kind": "value",
+            "provider": "local",
+            "synchronous": true,
+            "nodeType": "gmd:metadata",
+            "columns": "gmd:distributionFormat(STRING)"
+        },
+        "filesByCrs": {
+            "kind": "value",
+            "provider": "local",
+            "synchronous": true,
+            "nodeType": "nls:datasetfile",
+            "columns": "nls:crs(STRING)"
+        },
+        "filesByLastUpdated": {
+            "kind": "value",
+            "provider": "local",
+            "synchronous": true,
+            "nodeType": "nls:datasetfile",
+            "columns": "nls:fileChanged(DATE)"
+        }
+    },
     "monitoring" : {
         "enabled" : true
     },
@@ -44,29 +101,5 @@
                 "dataSourceName" : "java:comp/env/jdbc/tiepaldb",
             }
         ]
-    },
-    "query" : {
-        "enabled" : true,
-        "indexStorage" : {
-            "type" : "filesystem",
-            "location" : "target/data/index"
-        },
-        "indexing" : {
-            "rebuildOnStartup": {
-                "when" : "if_missing",
-                "includeSystemContent": true,
-                "mode": "async"
-            },
-            "threadPool" : "modeshape-workers",
-            "analyzer" : "org.apache.lucene.analysis.standard.StandardAnalyzer",
-            "similarity" : "org.apache.lucene.search.DefaultSimilarity",
-            "indexFormat" : "LUCENE_CURRENT",
-            "readerStrategy" : "shared",
-            "backend" : {
-                "type" : "lucene"
-            },
-            "batchSize" : -1,
-            "mode" : "sync"
-        }
     }
 }

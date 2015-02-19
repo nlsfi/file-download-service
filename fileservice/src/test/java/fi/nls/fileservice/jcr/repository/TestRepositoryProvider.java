@@ -1,6 +1,10 @@
 package fi.nls.fileservice.jcr.repository;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
@@ -37,7 +41,12 @@ public class TestRepositoryProvider {
     }
 
     public void shutdown() {
-        engine.shutdown();
+        Future<Boolean> future = engine.shutdown();
+        try {
+			future.get(30, TimeUnit.SECONDS);
+		} catch (InterruptedException | ExecutionException | TimeoutException e) {
+			throw new RuntimeException(e);
+		}
     }
 
 }
