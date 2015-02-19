@@ -64,7 +64,9 @@ public class IntegrationTest {
         DataSource dataSource = new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.HSQL)
                 .setName("tiepaldb;sql.syntax_pgs=true")
-                .addScript("classpath:create-tables.sql").build();
+                .addScript("file:../resources/sql/create-tables.sql")
+                .addScript("file:../resources/sql/data-hsql.sql")
+                .build();
 
         SimpleNamingContextBuilder builder = new SimpleNamingContextBuilder();
         builder.bind("java:comp/env/jdbc/tiepaldb", dataSource);

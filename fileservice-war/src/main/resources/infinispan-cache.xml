@@ -28,7 +28,7 @@
             purgeOnStartup="false">
  
             <properties>
-               <property name="location" value="/data/bdb"/>
+               <property name="location" value="${application.home}/bdb"/>
             </properties>
  
          </loader>

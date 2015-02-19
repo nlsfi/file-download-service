@@ -25,7 +25,7 @@
     "externalSources" : {
         "lataamo" : {
             "classname" : "org.modeshape.connector.filesystem.FileSystemConnector",
-            "directoryPath" : "/data/external",
+            "directoryPath" : "${external.source.lataamo.path}",
             "projections" :  [ "default:/tuotteet => /" ],
             "addMimeTypeMixin" : true,
             "contentBasedSha1": false,
