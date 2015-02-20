@@ -3,8 +3,8 @@
  **/
 
 datasetHandler.addDatasetDefinition({
-    datasetName: 'taustakarttasarja',
-    fileIdentifier: 'taustakarttasarja_jhs180',
+    datasetName: 'taustakarttasarja_jhs180',
+    fileIdentifier: 'c22da116-5095-4878-bb04-dd7db3a1a341',
     pattern: /\/tuotteet\/taustakarttasarja_jhs180\/(\w*)\/\w*\/(\w*)\/(\w*)\/(?:\w*\/){0,2}(?:\d*|(\w*)).png/i,
     mappers: [
         defaultMapper(MetadataProperty.NLS_DATASETVERSION),
