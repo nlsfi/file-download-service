@@ -8,12 +8,11 @@
         }
     },
     "indexes": {
-        "datasetsByName": {
-            "kind": "value",
+        "datasetsByType": {
+            "kind": "nodeType",
             "provider": "local",
-            "synchronous": true,
             "nodeType": "nls:dataset",
-            "columns": "jcr:name(NAME)"
+            "columns": "jcr:primaryType(STRING)"
         },
         "filesByDataset": {
             "kind": "value",

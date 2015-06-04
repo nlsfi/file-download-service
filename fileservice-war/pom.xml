@@ -16,6 +16,11 @@
     </properties>
     <dependencies>
         <dependency>
+            <groupId>org.jboss.narayana.jta</groupId>
+            <artifactId>narayana-jta</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>fi.nls.fileservice</groupId>
             <artifactId>modeshape-authz</artifactId>
             <version>${project.version}</version>
