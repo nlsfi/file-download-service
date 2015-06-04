@@ -131,8 +131,8 @@ function getStreamFromNode(node) {
  * @param {string} encoding - file character encoding
  * @returns java.io.InputStream
  */
-function getStreamFromFile(path, encoding) {
-    return new java.io.FileInputStream(path, encoding);
+function getStreamFromFile(path) {
+    return new java.io.FileInputStream(path);
 }
 
 /**

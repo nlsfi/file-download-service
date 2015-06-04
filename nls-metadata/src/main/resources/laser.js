@@ -13,7 +13,7 @@ datasetHandler.addDatasetDefinition({
     ],
     callback: function(node, outputProperties) {
         node.addMixin('nls:lidar');
-        outputProperties.put(MetadataProperty.NLS_DATASET_VERSION, "etrs-tm35fin-n2000");
+        outputProperties.put(MetadataProperty.NLS_DATASETVERSION, "etrs-tm35fin-n2000");
         outputProperties.put(MetadataProperty.GMD_DISTRIBUTIONFORMAT, 'LAZ');
 
         var csvMappers = {};
