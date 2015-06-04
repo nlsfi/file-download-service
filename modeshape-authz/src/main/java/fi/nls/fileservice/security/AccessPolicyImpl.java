@@ -37,8 +37,6 @@ public class AccessPolicyImpl implements AccessPolicy {
     @Override
     public boolean isAllowed(String path, String... actions) {
 
-        boolean isAllowed = false;
-
         if (acis != null) {
             for (ACE aci : acis) {
                 if (path.startsWith(aci.getPath())) {
@@ -52,22 +50,17 @@ public class AccessPolicyImpl implements AccessPolicy {
 
                     List<Privilege> privs = aci.getPrivileges();
                     for (String requestedAction : actions) {
-                        boolean allowForAction = false;
                         for (Privilege privilege : privs) {
                             if (privilege.equals(requestedAction)) {
-                                allowForAction = true;
-                                isAllowed = true;
+                                return true;
                             }
-                        }
-                        if (!allowForAction) {
-                            return false;
                         }
                     }
                 }
             }
         }
 
-        return isAllowed;
+        return false;
 
     }
 
