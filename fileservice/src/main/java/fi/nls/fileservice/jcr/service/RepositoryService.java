@@ -11,4 +11,8 @@ public interface RepositoryService {
     void importRepository(InputStream in) throws IOException;
 
     void exportRepository(OutputStream out) throws IOException;
+    
+    void backupRepository(String backupBaseDir, boolean includeBinaries);
+    
+    void restoreRepository(String backupBaseDir, boolean includeBinaries, boolean reindexContentOnFinish);
 }

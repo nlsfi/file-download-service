@@ -20,7 +20,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,7 +50,7 @@ import fi.nls.fileservice.order.OrderService;
 import fi.nls.fileservice.security.ExpiredOrNonexistingTokenException;
 import fi.nls.fileservice.security.PermissionDeniedException;
 import fi.nls.fileservice.web.api.controller.APIException;
-import fi.nls.fileservice.web.common.APIResponse;
+import fi.nls.fileservice.web.api.controller.APIResponse;
 import fi.nls.fileservice.web.controller.BaseController;
 import fi.nls.fileservice.web.feed.atom.builder.FeedMetadata;
 
