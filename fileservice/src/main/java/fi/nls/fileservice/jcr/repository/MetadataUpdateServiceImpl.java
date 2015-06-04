@@ -12,23 +12,25 @@ import fi.nls.fileservice.security.jcr.CredentialsProvider;
 
 public class MetadataUpdateServiceImpl implements MetadataUpdateService {
 
-    private static final Logger logger = LoggerFactory
-            .getLogger(MetadataUpdateServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(MetadataUpdateServiceImpl.class);
 
     private Repository repository;
     private ExecutorService executor;
     private CredentialsProvider credentialsProvider;
     private ScriptProvider scriptProvider;
     private DatasetDAO datasetDAO;
+    private int persistChangesInBatchesOf;
 
     public MetadataUpdateServiceImpl(ExecutorService executor,
             ScriptProvider scriptProvider, Repository repository,
-            CredentialsProvider credentialsProvider, DatasetDAO datasetDAO) {
+            CredentialsProvider credentialsProvider, DatasetDAO datasetDAO,
+            int persistChangesInBatchesOf) {
         this.executor = executor;
         this.repository = repository;
         this.credentialsProvider = credentialsProvider;
         this.scriptProvider = scriptProvider;
         this.datasetDAO = datasetDAO;
+        this.persistChangesInBatchesOf = persistChangesInBatchesOf;
     }
 
     @Override
@@ -38,7 +40,8 @@ public class MetadataUpdateServiceImpl implements MetadataUpdateService {
         javascriptExecutor.init();
 
         MetadataUpdateTask task = new MetadataUpdateTask(repository,
-                credentialsProvider, javascriptExecutor, datasetDAO, paths);
+                credentialsProvider, javascriptExecutor, datasetDAO, paths,
+                persistChangesInBatchesOf);
 
         executor.submit(task);
         logger.info("Started metadata update for : {} file(s)", paths.length);

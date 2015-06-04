@@ -31,16 +31,18 @@ public class MetadataUpdateTask implements Callable<Object> {
     private MetadataUpdateExecutor executor;
     private CredentialsProvider credentialsProvider;
     private DatasetDAO datasetDAO;
+    private int persistChangesInBatchesOf = 100;
 
     public MetadataUpdateTask(Repository repository,
             CredentialsProvider credentialsProvider,
             MetadataUpdateExecutor executor, DatasetDAO datasetDAO,
-            String[] paths) {
+            String[] paths, int persistChangesInBatchesOf) {
         this.repository = repository;
         this.paths = paths;
         this.credentialsProvider = credentialsProvider;
         this.executor = executor;
         this.datasetDAO = datasetDAO;
+        this.persistChangesInBatchesOf = persistChangesInBatchesOf;
     }
 
     public void applyProperties(Node node, Map<String, Object> properties)
@@ -105,7 +107,7 @@ public class MetadataUpdateTask implements Callable<Object> {
                     Node node = session.getNode(paths[i]);
                     if (processNode(node)) {
                         // save session in batches of ten files
-                        if (i % 10 == 0) {
+                        if (i % persistChangesInBatchesOf == 0) {
                             session.save();
                         }
                     }
@@ -113,12 +115,13 @@ public class MetadataUpdateTask implements Callable<Object> {
                     logger.warn("File not found: " + paths[i]);
                     // noop, continuining
 
-                } catch (ScriptExecutionException sce) {
+                } catch (Exception sce) {
                     logger.warn("Error updating metadata for " + paths[i], sce);
                     // noop, continuining
                 }
             }
 
+            // finally save the last batch
             session.save();
 
             DatasetLastModificationTimeUpdater dcu = new DatasetLastModificationTimeUpdater(datasetDAO);

@@ -72,7 +72,8 @@ public class WebConfig extends WebMvcConfigurerAdapter implements
         MetadataUpdateServiceImpl service = new MetadataUpdateServiceImpl(
                 executor, scriptProvider, dataSourceConfig.repository(),
                 applicationConfig.systemCredentialsProvider(),
-                applicationConfig.datasetDAO());
+                applicationConfig.datasetDAO(),
+                env.getProperty("metadataupdate.task.save_changes_in_batches_of", Integer.class, 100));
         return service;
     }
 
