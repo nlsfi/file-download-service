@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.junit.BeforeClass;
@@ -39,7 +40,7 @@ public class FreemarkerTemplateResolverTest {
         model.put("uri", uri);
         model.put("date", new Date());
 
-        String message = templateResolver.getMessage("mail/tilaus_sp_fi.ftl",
+        String message = templateResolver.getMessage("mail/tilaus_sp", new Locale("fi","FI"),
                 model);
 
         assertTrue(message.contains(email));

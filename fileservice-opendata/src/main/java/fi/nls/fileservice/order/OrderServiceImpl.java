@@ -88,9 +88,8 @@ public class OrderServiceImpl implements OrderService {
         msgBodyModel.put(MailTemplateConstants.DATE, new Date());
 
         mailService.sendMessage(email, messageSource.getMessage(
-                "order_email_subject", null, locale), templateResolver
-                .getMessage("mail/tilaus_sp_" + locale.getLanguage() + ".ftl",
-                        msgBodyModel));
+                "order_email_subject", null, locale),
+                templateResolver.getMessage("mail/tilaus_sp", locale, msgBodyModel));
 
     }
 
@@ -181,9 +180,8 @@ public class OrderServiceImpl implements OrderService {
         try {
             mailService.sendMessage(existingUser.getEmail(), messageSource
                     .getMessage("mtp_order_email_subject", null, locale),
-                    templateResolver.getMessage(
-                            "mail/mtp_tilaus_sp_" + locale.getLanguage()
-                                    + ".ftl", model));
+                    templateResolver.getMessage("mail/mtp_tilaus_sp", locale, model));
+                                    
         } catch (NoSuchMessageException e) {
             throw new DataAccessException(e);
         } catch (TemplateResolvingException e) {

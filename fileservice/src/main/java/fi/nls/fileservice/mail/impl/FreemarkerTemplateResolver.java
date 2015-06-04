@@ -1,5 +1,6 @@
 package fi.nls.fileservice.mail.impl;
 
+import java.util.Locale;
 import java.util.Map;
 
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
@@ -17,13 +18,16 @@ public class FreemarkerTemplateResolver implements TemplateResolver {
     }
 
     @Override
-    public String getMessage(String template, Map<String, Object> model) {
+    public String getMessage(String template, Locale locale, Map<String, Object> model) {
+        StringBuilder templateFileName = new StringBuilder(template);
+        templateFileName.append("_");
+        templateFileName.append(locale.getLanguage());
+        templateFileName.append(".ftl");
         try {
             return FreeMarkerTemplateUtils.processTemplateIntoString(
-                    freemarkerConfiguration.getTemplate(template), model);
+                    freemarkerConfiguration.getTemplate(templateFileName.toString()), model);
         } catch (Exception e) {
-            throw new TemplateResolvingException("Error processing template: "
-                    + template, e);
+            throw new TemplateResolvingException("Error processing template: " + templateFileName.toString(), e);
         }
     }
 
