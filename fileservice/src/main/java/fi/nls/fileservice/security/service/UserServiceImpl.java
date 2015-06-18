@@ -1,13 +1,16 @@
 package fi.nls.fileservice.security.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import fi.nls.fileservice.dataset.Dataset;
 import fi.nls.fileservice.dataset.DatasetService;
 import fi.nls.fileservice.security.ACE;
+import fi.nls.fileservice.security.AccessPolicy;
 import fi.nls.fileservice.security.AccessPolicyImpl;
 import fi.nls.fileservice.security.AccessPolicyManager;
 import fi.nls.fileservice.security.Privilege;
@@ -74,51 +77,48 @@ public class UserServiceImpl implements UserService {
 
         List<Dataset> datasets = datasetService.getAllDatasets();
 
+        AccessPolicy policyFromStore = accessPolicyManager.getAccessPolicy(permissions.getUid());
+
         List<ACE> acis = permissions.getPermissions();
         if (acis == null) { // empty, remove all
-            acis = new ArrayList<ACE>();
-        }
-        List<ACE> addedAcis = new ArrayList<ACE>();
-        Iterator<ACE> iter = acis.iterator();
-        while (iter.hasNext()) {
-            ACE aci = iter.next();
-            if (aci.getPath() == null) {
-                iter.remove();
-            } else {
-                // remove possible trailing '/'
-                if (aci.getPath().endsWith("/") && aci.getPath().length() > 1) {
-                    aci.setPath(aci.getPath().substring(0,
-                            aci.getPath().length() - 1));
-                }
+            policyFromStore.removeAllPrivileges();
+        } else {
+            Iterator<ACE> iter = acis.iterator();
+            while (iter.hasNext()) {
+                ACE aci = iter.next();
+                if (aci.getPath() == null) {
+                    iter.remove();
+                } else {
+                    // remove possible trailing '/' from path
+                    if (aci.getPath().endsWith("/") && aci.getPath().length() > 1) {
+                        aci.setPath(aci.getPath().substring(0, aci.getPath().length() - 1));
+                    }
 
-                // we only support read privileges for external users for now
-                List<Privilege> privileges = new ArrayList<Privilege>(1);
-                privileges.add(Privilege.READ);
-                aci.setPrivileges(privileges);
+                    // we only support read privileges for external users for
+                    // now
+                    Set<Privilege> privileges = new HashSet<Privilege>();
+                    privileges.add(Privilege.READ);
+                    aci.setPrivileges(privileges);
 
-                // if a given path references a dataset, we also implicitly add
-                // read permission to corresponding dataset's metadata
-                // this is required for atom feeds to function
-                for (Dataset dataset : datasets) {
-                    if (aci.getPath() != null) {
-                        if (aci.getPath().startsWith(dataset.getPath())) {
-                            ACE newAci = new ACE();
-                            newAci.setPath(dataset.getMetadataPath());
-                            newAci.setPrivileges(privileges);
-                            addedAcis.add(newAci);
+                    // if a given path references a dataset, we also implicitly
+                    // add
+                    // read permission to corresponding dataset's metadata
+                    // this is required for atom feeds to function
+                    for (Dataset dataset : datasets) {
+                        if (aci.getPath() != null) {
+                            if (aci.getPath().startsWith(dataset.getPath())) {
+                                ACE ace = new ACE(dataset.getMetadataPath()); 
+                                ace.getPrivileges().add(Privilege.READ);
+                                acis.add(ace);
+                            }
                         }
                     }
                 }
             }
         }
-
-        if (!addedAcis.isEmpty()) {
-            acis.addAll(addedAcis);
-        }
-
-        AccessPolicyImpl policy = new AccessPolicyImpl(permissions.getUid(), acis, true);
-        accessPolicyManager.saveAccessPolicy(policy);
-
+        
+        policyFromStore.privilegesFrom(acis);
+        accessPolicyManager.saveAccessPolicy(policyFromStore);
     }
 
 }

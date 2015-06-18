@@ -20,10 +20,10 @@ public class UserDetails {
     }
 
     public String getUid() {
-        if (userAttributes != null) {
-            return userAttributes.get("uid");
+        if (this.userAttributes != null) {
+            return this.userAttributes.get("uid");
         }
-        return uid;
+        return this.uid;
     }
 
     public void setUserAttributes(Map<String, String> attrs) {
@@ -31,7 +31,7 @@ public class UserDetails {
     }
 
     public Map<String, String> getUserAttributes() {
-        return Collections.unmodifiableMap(userAttributes);
+        return Collections.unmodifiableMap(this.userAttributes);
     }
 
     public void setPermissions(List<ACE> permissions) {

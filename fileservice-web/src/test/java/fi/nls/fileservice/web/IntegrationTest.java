@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
 import java.io.ByteArrayInputStream;
 
 import javax.naming.NamingException;
@@ -31,7 +32,9 @@ import fi.nls.fileservice.dataset.Dataset;
 import fi.nls.fileservice.dataset.DatasetService;
 import fi.nls.fileservice.dataset.Licence;
 import fi.nls.fileservice.files.FileService;
+import fi.nls.fileservice.security.ACE;
 import fi.nls.fileservice.security.AccessPolicy;
+import fi.nls.fileservice.security.AccessPolicyImpl;
 import fi.nls.fileservice.security.AccessPolicyManager;
 import fi.nls.fileservice.security.Privilege;
 
@@ -63,7 +66,7 @@ public class IntegrationTest {
         // an embedded HSQLDB with PostgreSQL syntax enabled
         DataSource dataSource = new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.HSQL)
-                .setName("tiepaldb;sql.syntax_pgs=true")
+                .setName("tiepaldb;sql.syntax_pgs=true;hsqldb.sqllog=3")
                 .addScript("file:../resources/sql/create-tables.sql")
                 .addScript("file:../resources/sql/data-hsql.sql")
                 .build();
@@ -108,6 +111,13 @@ public class IntegrationTest {
         datasetService.saveDataset(dataset);
         dataset = datasetService.getDatasetById(dataset.getName());
         AccessPolicy policy = apm.getAccessPolicy(env.getProperty("opendata.account.name"));
+        
+        AccessPolicyImpl aPolicy = (AccessPolicyImpl)policy;
+        List<ACE> acis = aPolicy.getAcis();
+        for (ACE a : acis) {
+            System.out.println(a.getPath());
+        }
+        
        
         assertTrue(policy.isAllowed(dataset.getPath() + "/kaikki.zip", Privilege.READ.getName()));
         assertTrue(policy.isAllowed(dataset.getMetadataPath(), Privilege.READ.getName()));

@@ -1,9 +1,13 @@
 package fi.nls.fileservice.security;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -16,15 +20,14 @@ public class AccessPolicyImplTest {
 
         List<ACE> acis = new ArrayList<ACE>(2);
 
-        List<Privilege> privileges = new ArrayList<Privilege>();
+        Set<Privilege> privileges = new HashSet<Privilege>();
         privileges.add(Privilege.READ);
 
-        ACE mtk = new ACE();
-        mtk.setPath("/tuotteet/maastotietokanta");
+        ACE mtk = new ACE("/tuotteet/maastotietokanta");
         mtk.setPrivileges(privileges);
         acis.add(mtk);
 
-        AccessPolicyImpl policy = new AccessPolicyImpl(uid, acis);
+        AccessPolicy policy = new AccessPolicyImpl(uid, acis);
         policy.addPrivileges("/tuotteet/kuntajako", Privilege.READ);
 
         assertTrue(policy.isAllowed("/tuotteet/maastotietokanta/kaikki.zip", "read"));
@@ -36,21 +39,16 @@ public class AccessPolicyImplTest {
         
         String uid = "system";
 
-        List<ACE> acis = new ArrayList<ACE>(2);
-
-        List<Privilege> privileges = new ArrayList<Privilege>();
-        privileges.add(Privilege.REMOVE_CHILD_NODES);
-
-        ACE mtk = new ACE();
-        mtk.setPath("/share");
-        mtk.setPrivileges(privileges);
-        acis.add(mtk);
-
-        AccessPolicyImpl policy = new AccessPolicyImpl(uid, acis);
+        AccessPolicyImpl policy = new AccessPolicyImpl(uid);
+        policy.addPrivileges("/share", Privilege.REMOVE_CHILD_NODES);
         policy.addPrivileges("/share/de305d54-75b4-431b-adb2-eb6b9e546014", Privilege.READ);
 
+        List<ChangeSet> changes = policy.getChanges();
+        assertEquals(2, changes.size());
+                
         assertTrue(policy.isAllowed("/share/de305d54-75b4-431b-adb2-eb6b9e546014/foo", "read"));
         assertTrue(policy.isAllowed("/share", "remove_child_nodes"));
         assertFalse(policy.isAllowed("/share", "read"));
+                
     }
 }

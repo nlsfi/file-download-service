@@ -44,5 +44,10 @@ public class Privilege {
     public boolean equals(Privilege anotherPrivilege) {
         return this.name.equals(anotherPrivilege.getName());
     }
+    
+    @Override
+    public int hashCode() {
+        return this.name.hashCode();
+    }
 
 }

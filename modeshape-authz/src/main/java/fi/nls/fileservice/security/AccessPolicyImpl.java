@@ -1,29 +1,29 @@
 package fi.nls.fileservice.security;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 public class AccessPolicyImpl implements AccessPolicy {
-
+    
     private final String uid;
-    private List<ACE> acis;
-
-    private boolean isModified = true;
-
-    public AccessPolicyImpl(String uid, List<ACE> acis) {
-        this(uid, acis, false);
+    private final List<ACE> acis;
+    private final List<ChangeSet> changes;
+    
+    public AccessPolicyImpl(String uid) {
+        this(uid, new ArrayList<ACE>());
     }
-
-    public AccessPolicyImpl(String uid, List<ACE> acis, boolean isNew) {
+    
+    public AccessPolicyImpl(String uid, List<ACE> acis) {
         this.uid = uid;
         this.acis = acis;
-        this.isModified = isNew;
+        this.changes = new ArrayList<ChangeSet>();
     }
 
     public String getUid() {
-        return uid;
+        return uid; 
     }
 
     public List<ACE> getAcis() {
@@ -31,7 +31,7 @@ public class AccessPolicyImpl implements AccessPolicy {
     }
 
     public boolean isModified() {
-        return this.isModified;
+        return this.changes.size() > 0;
     }
 
     @Override
@@ -41,19 +41,16 @@ public class AccessPolicyImpl implements AccessPolicy {
             for (ACE aci : acis) {
                 if (path.startsWith(aci.getPath())) {
                     int aciPathLength = aci.getPath().length();
-                    if (aciPathLength > 1
-                            && path.length() > aci.getPath().length()) {
+                    if (aciPathLength > 1 && path.length() > aci.getPath().length()) {
                         if (path.charAt(aci.getPath().length()) != '/') {
                             continue;
                         }
                     }
 
-                    List<Privilege> privs = aci.getPrivileges();
+                    Collection<Privilege> privs = aci.getPrivileges();
                     for (String requestedAction : actions) {
-                        for (Privilege privilege : privs) {
-                            if (privilege.equals(requestedAction)) {
-                                return true;
-                            }
+                        if (privs.contains(Privilege.forName(requestedAction))) {
+                            return true;
                         }
                     }
                 }
@@ -61,25 +58,28 @@ public class AccessPolicyImpl implements AccessPolicy {
         }
 
         return false;
-
     }
 
     @Override
     public void removePrivilege(String path, Privilege... actions) {
-        if (acis != null) {
-            Iterator<ACE> acisIter = acis.iterator();
+        if (this.acis != null) {
+            Iterator<ACE> acisIter = this.acis.iterator();
             while (acisIter.hasNext()) {
                 ACE aci = acisIter.next();
 
                 if (aci.getPath().equals(path)) {
-                    List<Privilege> existingPrivileges = aci.getPrivileges();
-                    if (existingPrivileges.removeAll(Arrays.asList(actions))) {
-                        this.isModified = true;
-                        if (existingPrivileges.size() == 0) {
-                            acisIter.remove();
+                    Collection<Privilege> existingPrivileges = aci.getPrivileges();
+                    for (Privilege p : actions) {
+                        if (existingPrivileges.contains(p)) {
+                            existingPrivileges.remove(p);
                         }
                     }
-
+                    if (existingPrivileges.size() == 0) {
+                        this.changes.add(new ChangeSet(aci, ChangeSet.ChangeType.REMOVE));
+                        acisIter.remove();
+                    } else {
+                        this.changes.add(new ChangeSet(aci, ChangeSet.ChangeType.MODIFY));
+                    }
                 }
             }
         }
@@ -87,41 +87,82 @@ public class AccessPolicyImpl implements AccessPolicy {
 
     @Override
     public void addPrivileges(String path, Privilege... actions) {
-        if (this.acis == null) {
-            this.acis = new ArrayList<ACE>();
-        }
 
         boolean foundExisting = false;
         Iterator<ACE> acisIter = this.acis.iterator();
         while (acisIter.hasNext()) {
-            ACE aci = acisIter.next();
+            ACE ace = acisIter.next();
 
-            if (aci.getPath().equals(path)) {
+            if (ace.getPath().equals(path)) {
                 foundExisting = true;
 
-                List<Privilege> existingPrivileges = aci.getPrivileges();
-                if (existingPrivileges.size() == actions.length) {
-                    for (Privilege p : actions) {
-                        if (!existingPrivileges.contains(p)) {
-                            aci.setPrivileges(Arrays.asList(actions));
-                            this.isModified = true;
-                            break;
-                        }
-                    }
-                } else {
-                    aci.setPrivileges(Arrays.asList(actions));
-                    this.isModified = true;
+                Collection<Privilege> existingPrivileges = ace.getPrivileges();
+                for (Privilege p : actions) {
+                    existingPrivileges.add(p);
                 }
+                this.changes.add(new ChangeSet(ace, ChangeSet.ChangeType.MODIFY));
             }
         }
 
         if (!foundExisting) {
-            ACE newACI = new ACE();
-            newACI.setPath(path);
-            newACI.setPrivileges(Arrays.asList(actions));
-            this.acis.add(newACI);
-            this.isModified = true;
+            ACE newAce = new ACE(path);
+            for (Privilege p : actions) {
+                newAce.getPrivileges().add(p);
+            }
+            this.acis.add(newAce);
+            this.changes.add(new ChangeSet(newAce, ChangeSet.ChangeType.ADD));
         }
+    }
+    
+    public List<ChangeSet> getChanges() {
+        return this.changes;
+    }
+
+    @Override
+    public void removeAllPrivileges() {
+        Iterator<ACE> acisIter = this.acis.iterator();
+        while(acisIter.hasNext()) {
+            ACE ace = acisIter.next();
+            acisIter.remove();
+            this.changes.add(new ChangeSet(ace, ChangeSet.ChangeType.REMOVE));
+        }
+    }
+
+    @Override
+    public void privilegesFrom(Collection<ACE> newACEs) {
+        Iterator<ACE> currentACEs = this.acis.iterator();
+        while(currentACEs.hasNext()) {
+            ACE ace = currentACEs.next();
+            boolean present= false;
+            for (ACE newACE : newACEs) {
+                if (ace.getPath().equals(newACE.getPath())) {
+                    present = true;
+                    if (!ace.getPrivileges().equals(newACE.getPrivileges())) {
+                        ace.setPrivileges((Set<Privilege>)newACE.getPrivileges());
+                        this.changes.add(new ChangeSet(ace, ChangeSet.ChangeType.MODIFY));
+                    }
+                }
+            }
+            if (!present) {
+                currentACEs.remove();
+                this.changes.add(new ChangeSet(ace, ChangeSet.ChangeType.REMOVE));
+            }
+        }
+        
+        for (ACE newACE : newACEs) {
+            boolean isNew = true;
+            for (ACE ace : this.acis) {
+                if (ace.getPath().equals(newACE.getPath())) {
+                    isNew = false;
+                }
+            }
+            if (isNew) {
+                this.acis.add(newACE);
+                this.changes.add(new ChangeSet(newACE, ChangeSet.ChangeType.ADD));
+            }
+                
+        }
+        
     }
 
 }

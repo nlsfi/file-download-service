@@ -21,8 +21,7 @@ public abstract class DBBase {
             InitialContext ctx = new InitialContext();
             this.dataSource = (DataSource) ctx.lookup(name);
         } catch (NamingException e) {
-            throw new RuntimeException("Error acquiring datasource with name "
-                    + name, e);
+            throw new RuntimeException("Error acquiring datasource with name " + name, e);
         }
     }
 
